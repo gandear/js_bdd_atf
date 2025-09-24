@@ -1,0 +1,67 @@
+{
+  "name": "bdd-js-playwright",
+  "version": "1.0.0",
+  "description": "BDD testing framework with Playwright for OrangeHRM login functionality",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "bddgen": "set DOTENV_CONFIG_QUIET=true && npx bddgen",
+    
+    "test": "npx playwright test",
+    
+    "test:api": "npx playwright test --project=api-bdd",
+    "test:api:tag_auth": "npx playwright test --project=api-bdd --grep=@auth",
+    "test:ui": "npx playwright test --project=chromium-ui",
+    "test:ui:all": "set FULL_BROWSER_SUITE=true && npx playwright test --project=chromium-ui --project=firefox-ui --project=webkit-ui",
+    "test:ui:chrome": "npx playwright test --project=chromium-ui",
+    "test:ui:firefox": "set FULL_BROWSER_SUITE=true && npx playwright test --project=firefox-ui",
+    "test:ui:webkit": "set FULL_BROWSER_SUITE=true && npx playwright test --project=webkit-ui",
+    
+    "test:debug": "set DEBUG_TESTS=true && npx playwright test --headed --workers=1",
+    "test:api:debug": "set DEBUG_TESTS=true && npx playwright test --project=api-bdd",
+    "test:ui:debug": "set DEBUG_TESTS=true && npx playwright test --project=chromium-ui --headed --workers=1",
+    
+    "test:ci": "set CI=true && npx playwright test",
+    
+    "test:list": "npx playwright test --list",
+    "test:list:api": "npx playwright test --project=api-bdd --list",
+    "test:config": "npx playwright show-config",
+    
+    "cleanup": "node -e \"const fs=require('fs'); ['test-results','allure-results'].forEach(dir => {try{fs.rmSync(dir,{recursive:true,force:true})}catch(e){}})\"",
+    "cleanup:logs": "node -e \"const fs=require('fs'); const path='./logs'; if(fs.existsSync(path)){fs.rmSync(path,{recursive:true,force:true}); fs.mkdirSync(path)}\"",
+    "cleanup:full": "npm run cleanup && npm run cleanup:logs && npm run allure:clear",
+    
+    "allure:report": "npx allure generate allure-results --clean && npx allure open",
+    "allure:clear": "rimraf allure-results allure-report",
+    
+    "pretest": "npm run cleanup:logs",
+    "posttest": "echo Tests completed. Check ./test-results for artifacts.",
+    
+    "test:smoke": "npx playwright test --project=api-bdd --grep='@smoke'",
+    "test:regression": "npx playwright test --grep='@regression'",
+    "test:api:users": "npx playwright test --project=api-bdd --grep='users'",
+    
+    "dev:test": "set NODE_ENV=development && npm run test",
+    "dev:test:api": "set NODE_ENV=development && npm run test:api",
+    
+    "ci:test": "set CI=true && set NODE_ENV=test && npx playwright test",
+    "ci:test:api": "set CI=true && set NODE_ENV=test && npm run test:api"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "pino": "^9.9.5",
+    "pino-pretty": "^13.1.1",
+    "playwright": "^1.39.0",
+    "playwright-bdd": "^8.4.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.39.0",
+    "ajv-formats": "^3.0.1",
+    "allure-commandline": "^2.34.1",
+    "allure-playwright": "^2.15.1",
+    "archiver": "^7.0.1",
+    "dotenv": "^17.2.2"
+  },
+  "author": "",
+  "license": "ISC"
+}

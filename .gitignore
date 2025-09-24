@@ -1,0 +1,19 @@
+# Node
+node_modules/
+# Env
+.env
+# Playwright / test artifacts
+allure-results/
+test-results/
+playwright-report/
+reports/
+# Local logs / archives
+logs/
+# Generated BDD artifacts
+.features-gen/
+# IDE / editor
+.idea/
+*.iml
+.vscode/
+# Misc
+.DS_Store

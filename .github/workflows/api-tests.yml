@@ -1,0 +1,80 @@
+# .github/workflows/api-tests.yml
+name: API Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * 1-5' # Run at 2 AM on weekdays
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [dev, staging]
+        shard: [1/4, 2/4, 3/4, 4/4]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install Playwright
+      run: npx playwright install chromium
+      
+    - name: Run BDD generation
+      run: npx bddgen
+      
+    - name: Run API tests
+      run: npx playwright test --project=api-bdd --shard=${{ matrix.shard }}
+      env:
+        TEST_ENV: ${{ matrix.environment }}
+        CI: true
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report-${{ matrix.environment }}-${{ matrix.shard }}
+        path: |
+          playwright-report/
+          test-results/
+          reports/
+          
+    - name: Upload logs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: logs-${{ matrix.environment }}-${{ matrix.shard }}
+        path: logs/
+
+  publish-results:
+    needs: api-tests
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: API Test Results
+        path: '**/junit.xml'
+        reporter: java-junit

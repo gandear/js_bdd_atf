@@ -1,0 +1,10 @@
+export const storageFixtures = {
+  storageState: async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: 'storageState.json' });
+    try {
+      await use(context);
+    } finally {
+      await context.close();
+    }
+  },
+};
