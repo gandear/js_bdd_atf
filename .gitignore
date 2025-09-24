@@ -9,8 +9,6 @@ playwright-report/
 reports/
 # Local logs / archives
 logs/
-# Generated BDD artifacts
-.features-gen/
 # IDE / editor
 .idea/
 *.iml
