@@ -36,7 +36,7 @@ export default defineConfig({
   fullyParallel: true,
 
   // Smart outputDir management
-  outputDir: isCI ? null : './test-results',
+  outputDir: './test-results',
   
   // Enhanced reporting with cleanup
   reporter: [
