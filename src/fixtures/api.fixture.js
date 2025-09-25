@@ -4,61 +4,57 @@ import { ApiClient } from '../api/clients/ApiClient.js';
 import { TestDataManager } from '../api/helpers/testDataManager.js';
 
 export const apiFixtures = {
-  // Returnează un APIRequestContext configurat din project.use (nu din env)
-  apiRequest: async ({}, use, testInfo) => {
-    const { use: projectUse = {} } = testInfo?.project ?? {};
-    const baseRaw = projectUse.baseURL || 'https://reqres.in/';
-    const headersFromConfig = projectUse.extraHTTPHeaders || {};
-
-    // Asigură trailing slash la baseURL pentru rezolvarea corectă a path-urilor relative
+  apiRequest: async ({}, use) => {
+    // 1) Base URL curat (fără trailing slash)
+    const raw = process.env.API_BASE_URL || 'https://reqres.in';
     let baseURL;
     try {
-      baseURL = new URL(String(baseRaw)).toString();
+      baseURL = new URL(raw).toString().replace(/\/$/, '');
     } catch {
-      throw new Error(`Invalid API baseURL: ${baseRaw}`);
+      throw new Error(`Invalid API_BASE_URL: ${raw}`);
     }
 
-    // Construieste header-ele finale (nu logăm secretele)
-    const headers = {
-      'Content-Type': 'application/json',
-      ...headersFromConfig
-    };
+    // 2) Header-ele minime
+    const headers = { 'Content-Type': 'application/json' };
 
-    // (opțional) atașament Allure cu config redactionat
-    try {
-      const redacted = Object.fromEntries(
-        Object.entries(headers).map(([k, v]) =>
-          /(token|secret|key|authorization)/i.test(k) ? [k, '***'] : [k, v]
-        )
-      );
-      await testInfo.attach('api-context.json', {
-        contentType: 'application/json',
-        body: JSON.stringify({ baseURL, headers: redacted }, null, 2)
-      });
-    } catch {}
+    // 3) Politica de auth:
+    // - implicit: dacă există token -> ATAȘEAZĂ (utile în CI/proxy)
+    // - se poate forța dezactivarea cu API_DISABLE_AUTH=true
+    // - sau forța activarea cu API_REQUIRE_AUTH=true (pentru claritate)
+    const disableAuth = String(process.env.API_DISABLE_AUTH || 'false').toLowerCase() === 'true';
+    const requireAuth = String(process.env.API_REQUIRE_AUTH || 'false').toLowerCase() === 'true';
+
+    const token = (process.env.API_TOKEN || '').trim();
+    const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
+    const scheme = (process.env.API_AUTH_SCHEME || 'api-key').toLowerCase(); // 'api-key' | 'bearer'
+
+    const shouldAttach =
+      !disableAuth && (requireAuth || token.length > 0);
+
+    if (shouldAttach) {
+      if (scheme === 'bearer') headers['Authorization'] = `Bearer ${token}`;
+      else headers[apiKeyHeader] = token;
+    }
 
     const ctx = await pwRequest.newContext({
       baseURL,
       extraHTTPHeaders: headers,
       ignoreHTTPSErrors: true,
-      timeout: 15_000
+      timeout: 15_000,
     });
 
     await use(ctx);
     await ctx.dispose();
   },
 
-  // Client de nivel superior care folosește contextul API
   apiClient: async ({ apiRequest }, use) => {
-    await use(new ApiClient(apiRequest)); // în client: folosește rute relative (fără "/")
+    await use(new ApiClient(apiRequest));
   },
 
-  // Stare simplă partajată între pași
   apiState: async ({}, use) => {
     await use({ res: null, json: null, error: null });
   },
 
-  // Manager pentru test data + cleanup automat + atașament Allure cu metrici
   testDataManager: async ({ apiClient }, use, testInfo) => {
     const manager = new TestDataManager(apiClient);
     await use(manager);
