@@ -41,8 +41,10 @@ export default defineConfig({
   // Enhanced reporting with cleanup
   reporter: [
     ['list'], 
-    ['allure-playwright', { 
-      outputDir: 'allure-results',
+    ['allure-playwright', {
+      // ⬇️ citește din env-ul pipeline-ului; local cade pe 'allure-results'
+      outputFolder: process.env.ALLURE_RESULTS_DIR || 'allure-results',
+      // opțional, dacă versiunea ta suportă:
       environmentInfo: {
         Environment: process.env.NODE_ENV || 'test',
         'Test Type': 'BDD + Playwright API & UI'
