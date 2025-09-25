@@ -9,15 +9,16 @@ export const apiFixtures = {
     const baseURL = new URL(raw).origin;
 
     const apiKeyHeader = process.env.API_KEY_HEADER ?? 'x-api-key';
-    const token = process.env.API_TOKEN;
+    const token = process.env.API_TOKEN || ''; // în CI îl injectezi din Jenkins
+
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers[apiKeyHeader] = token; // atașează doar dacă există token
 
     const ctx = await pwRequest.newContext({
       baseURL,
-      extraHTTPHeaders: {
-        ...(token ? { [apiKeyHeader]: token } : {}) // doar dacă există token
-      },
-      ignoreHTTPSErrors: true, // ok pentru public HTTPS; poți scoate dacă vrei strict
-      timeout: 15_000
+      extraHTTPHeaders: headers,
+      ignoreHTTPSErrors: true,
+      timeout: 15_000,
     });
 
     await use(ctx);
