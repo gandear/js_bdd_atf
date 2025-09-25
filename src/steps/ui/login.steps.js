@@ -6,8 +6,6 @@ import { expect } from '@playwright/test';
 
 export const { Given, When, Then, Before, After } = createBdd(test);
 
-const loginUrl = process.env.LOGIN_PATH || 'web/index.php/auth/login';
-
 // Given steps
 Given('I am on the OrangeHRM login page', async ({ loginPage, log }) => {
   log.step('Navigate to OrangeHRM login page');
