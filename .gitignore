@@ -16,5 +16,5 @@ logs/
 # Misc
 .DS_Store
 
-# Backup files
+# Backup folder
 BACKUP
