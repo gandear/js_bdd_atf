@@ -5,9 +5,11 @@ import { defineBddProject } from 'playwright-bdd';
 
 const isCI = !!process.env.CI;
 const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
-const baseURL = (process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com').replace(/\/$/, '');
 
-// --- API config (ENV din Jenkins) ---
+// UI baseURL 
+const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com/';
+
+// --- API config  ---
 const apiBaseURL   = process.env.API_BASE_URL || 'https://reqres.in/';
 const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
 const apiToken     = process.env.API_TOKEN || '';
@@ -18,34 +20,13 @@ const apiHeaders = {
   ...(apiToken ? { [apiKeyHeader]: apiToken } : {})
 };
 
-<<<<<<< Updated upstream
+// Setări UI comune (compact, CI-friendly)
 const uiUse = {
   baseURL,
-  headless: true,                 
+  headless: true,                 // CI-safe; local poți folosi --headed / PWDEBUG=1
   trace: 'retain-on-failure',
   screenshot: 'only-on-failure',
   video: 'off'
-=======
-const isCI    = !!process.env.CI;
-const isDebug = !!process.env.DEBUG_TESTS;
-
-// headless: în CI mereu true; local doar dacă nu e debug
-const headless = isCI ? true : !isDebug;
-
-const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com';
-
-const artifactStrategies = {
-  api: {
-    trace: 'off',
-    screenshot: 'off',
-    video: 'off'
-  },
-  ui: {
-    trace: isDebug ? 'on' : 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: isDebug ? 'on' : 'retain-on-failure'
-  }
->>>>>>> Stashed changes
 };
 
 export default defineConfig({
@@ -61,8 +42,8 @@ export default defineConfig({
 
   reporter: [
     ['list'],
-    ['junit', { outputFile: 'junit/results.xml' }],               // pentru Jenkins JUnit
-    ['allure-playwright', {                                        // pentru Allure plugin în Jenkins
+    ['junit', { outputFile: 'junit/results.xml' }],
+    ['allure-playwright', {
       outputFolder: process.env.ALLURE_RESULTS_DIR || 'allure-results',
       environmentInfo: {
         Environment: process.env.NODE_ENV || 'test',
@@ -72,10 +53,11 @@ export default defineConfig({
     ['./src/utils/cleanup-reporter.js']
   ],
 
-  use: { ...uiUse }, // fallback global; proiectele pot suprascrie
+  // fallback global (UI proiectele pot suprascrie)
+  use: { ...uiUse },
 
   projects: [
-    // API (fără artefacte UI)
+    // === API ===
     {
       ...defineBddProject({
         name: 'api-bdd',
@@ -85,13 +67,15 @@ export default defineConfig({
       }),
       metadata: { suite: 'API' },
       use: {
-        baseURL: apiBaseURL,                 // relativ pentru request-uri
-        extraHTTPHeaders: apiHeaders,        // include x-api-key dacă e setat
-        trace: 'off', screenshot: 'off', video: 'off'
+        baseURL: apiBaseURL,          
+        extraHTTPHeaders: apiHeaders, 
+        trace: 'off',
+        screenshot: 'off',
+        video: 'off'
       }
     },
 
-    // UI – Chromium / Firefox / WebKit
+    // === UI – Chromium / Firefox / WebKit ===
     {
       ...defineBddProject({
         name: 'chromium-ui',
@@ -100,11 +84,7 @@ export default defineConfig({
         outputDir: '.features-gen/chromium'
       }),
       metadata: { suite: 'UI' },
-<<<<<<< Updated upstream
       use: { ...uiUse, browserName: 'chromium' }
-=======
-      use: { browserName: 'chromium', headless, baseURL,...artifactStrategies.ui }
->>>>>>> Stashed changes
     },
     {
       ...defineBddProject({
@@ -114,11 +94,7 @@ export default defineConfig({
         outputDir: '.features-gen/firefox'
       }),
       metadata: { suite: 'UI' },
-<<<<<<< Updated upstream
       use: { ...uiUse, browserName: 'firefox' }
-=======
-      use: { browserName: 'firefox', headless, baseURL, ...artifactStrategies.ui }
->>>>>>> Stashed changes
     },
     {
       ...defineBddProject({
@@ -128,11 +104,7 @@ export default defineConfig({
         outputDir: '.features-gen/webkit'
       }),
       metadata: { suite: 'UI' },
-<<<<<<< Updated upstream
       use: { ...uiUse, browserName: 'webkit' }
-=======
-      use: { browserName: 'webkit', headless, baseURL,...artifactStrategies.ui }
->>>>>>> Stashed changes
     }
   ],
 
