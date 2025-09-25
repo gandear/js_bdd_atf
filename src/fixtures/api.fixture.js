@@ -6,7 +6,13 @@ import { TestDataManager } from '../api/helpers/testDataManager.js';
 export const apiFixtures = {
   apiRequest: async ({}, use) => {
     const raw = process.env.API_BASE_URL ?? 'https://reqres.in';
-    const baseURL = new URL(raw).origin;
+    let baseURL;
+    try {
+      baseURL = new URL(raw).toString().replace(/\/$/, ''); // păstrează path-ul, doar taie slash final
+    } catch {
+      throw new Error(`Invalid API_BASE_URL: ${raw}`);
+    }
+
 
     const apiKeyHeader = process.env.API_KEY_HEADER ?? 'x-api-key';
     const token = process.env.API_TOKEN || ''; // în CI îl injectezi din Jenkins
