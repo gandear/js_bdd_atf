@@ -1,44 +1,35 @@
 // playwright.config.js
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { defineConfig } from '@playwright/test';
 import { defineBddProject } from 'playwright-bdd';
 
-dotenv.config({ quiet: true });
-
+const isCI = !!process.env.CI;
 const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
+const baseURL = (process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com').replace(/\/$/, '');
 
-const isCI    = !!process.env.CI;
-const isDebug = !!process.env.DEBUG_TESTS;
-
-// headless: în CI mereu true; local doar dacă nu e debug
-const headless = isCI ? true : !isDebug;
-
-const artifactStrategies = {
-  api: {
-    trace: 'off',
-    screenshot: 'off',
-    video: 'off'
-  },
-  ui: {
-    trace: isDebug ? 'on' : 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: isDebug ? 'on' : 'retain-on-failure'
-  }
+const uiUse = {
+  baseURL,
+  headless: true,                 
+  trace: 'retain-on-failure',
+  screenshot: 'only-on-failure',
+  video: 'off'
 };
 
 export default defineConfig({
-  globalSetup: './src/setup/global-setup.js',
-  globalTeardown: './src/setup/global-teardown.js',
+  // stabilitate în CI
+  forbidOnly: isCI,
+  retries: isCI ? 2 : 0,
+  workers: isCI ? 2 : undefined,
 
-  timeout: 30 * 1000,
-  expect: { timeout: 5000 },
+  timeout: 30_000,
+  expect: { timeout: 5_000 },
   fullyParallel: true,
-
-  outputDir: './test-results',
+  outputDir: 'test-results',
 
   reporter: [
     ['list'],
-    ['allure-playwright', {
+    ['junit', { outputFile: 'junit/results.xml' }],               // pentru Jenkins JUnit
+    ['allure-playwright', {                                        // pentru Allure plugin în Jenkins
       outputFolder: process.env.ALLURE_RESULTS_DIR || 'allure-results',
       environmentInfo: {
         Environment: process.env.NODE_ENV || 'test',
@@ -48,16 +39,10 @@ export default defineConfig({
     ['./src/utils/cleanup-reporter.js']
   ],
 
-  // fallback global (UI proiectele pot override)
-  use: {
-    headless,                     // ⬅ garantat headless în CI
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
-  },
+  use: { ...uiUse }, // fallback global; proiectele pot suprascrie
 
   projects: [
-    // API
+    // API (fără artefacte UI)
     {
       ...defineBddProject({
         name: 'api-bdd',
@@ -66,10 +51,10 @@ export default defineConfig({
         outputDir: '.features-gen/api'
       }),
       metadata: { suite: 'API' },
-      use: { ...artifactStrategies.api }   // headless nu e relevant la API
+      use: { trace: 'off', screenshot: 'off', video: 'off' }
     },
 
-    // UI - Chromium
+    // UI – Chromium / Firefox / WebKit
     {
       ...defineBddProject({
         name: 'chromium-ui',
@@ -78,10 +63,8 @@ export default defineConfig({
         outputDir: '.features-gen/chromium'
       }),
       metadata: { suite: 'UI' },
-      use: { browserName: 'chromium', headless, ...artifactStrategies.ui }
+      use: { ...uiUse, browserName: 'chromium' }
     },
-
-    // UI - Firefox
     {
       ...defineBddProject({
         name: 'firefox-ui',
@@ -90,10 +73,8 @@ export default defineConfig({
         outputDir: '.features-gen/firefox'
       }),
       metadata: { suite: 'UI' },
-      use: { browserName: 'firefox', headless, ...artifactStrategies.ui }
+      use: { ...uiUse, browserName: 'firefox' }
     },
-
-    // UI - WebKit
     {
       ...defineBddProject({
         name: 'webkit-ui',
@@ -102,9 +83,12 @@ export default defineConfig({
         outputDir: '.features-gen/webkit'
       }),
       metadata: { suite: 'UI' },
-      use: { browserName: 'webkit', headless, ...artifactStrategies.ui }
+      use: { ...uiUse, browserName: 'webkit' }
     }
   ],
+
+  globalSetup: './src/setup/global-setup.js',
+  globalTeardown: './src/setup/global-teardown.js',
 
   metadata: {
     'artifact-retention': isCI ? '1-day' : '7-days',

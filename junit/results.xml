@@ -1,0 +1,140 @@
+<testsuites id="" name="" tests="18" failures="0" skipped="0" errors="0" time="77.338932">
+<testsuite name=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" timestamp="2025-09-25T20:28:42.239Z" hostname="chromium-ui" tests="5" failures="0" skipped="0" time="32.126" errors="0">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #1" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="11.148">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-c9782-ssing-credentials-Example-1-chromium-ui\attachments\execution-log-ca01127f2a076442336f15cd8fc237e8bd40df3c.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #2" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="10.616">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-68b29-ssing-credentials-Example-2-chromium-ui\attachments\execution-log-f1e32426eac6e16a66eb3f3b75703a6364f2399d.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #3" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="2.991">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-3c37d-ssing-credentials-Example-3-chromium-ui\attachments\execution-log-51a2ec17f5142da272d676db61406ea27c15d326.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #4" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="3.433">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium-ui\attachments\execution-log-8024d3168128ee201efe3b684671ad941cfa3ee0.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #5" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="3.938">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-94581-ssing-credentials-Example-5-chromium-ui\attachments\execution-log-f4cbc20a7a347f9059d11e13d545ab7510fe1f7d.log]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" timestamp="2025-09-25T20:28:42.239Z" hostname="chromium-ui" tests="1" failures="0" skipped="0" time="5.059" errors="0">
+<testcase name="Login with Valid Credentials › Login with valid credentials" classname=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" time="5.059">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_posi-8925a-ogin-with-valid-credentials-chromium-ui\attachments\execution-log-cc348fc82b585b512017f361ab9b5c5a8bcc456e.log]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name=".features-gen\firefox\src\features\ui\login_negative.feature.spec.js" timestamp="2025-09-25T20:28:42.239Z" hostname="firefox-ui" tests="5" failures="0" skipped="0" time="28.808" errors="0">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #1" classname=".features-gen\firefox\src\features\ui\login_negative.feature.spec.js" time="8.519">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-c9782-ssing-credentials-Example-1-firefox-ui\attachments\execution-log-97a50d11368c6dc966ebe63e9158dd0047c227a6.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #2" classname=".features-gen\firefox\src\features\ui\login_negative.feature.spec.js" time="8.487">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-68b29-ssing-credentials-Example-2-firefox-ui\attachments\execution-log-1d0e307bc7374d34cccc4c74939bf139e15a8d42.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #3" classname=".features-gen\firefox\src\features\ui\login_negative.feature.spec.js" time="4.277">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-3c37d-ssing-credentials-Example-3-firefox-ui\attachments\execution-log-c12f5bffce671ba09f39a82b1821e8853d495df3.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #4" classname=".features-gen\firefox\src\features\ui\login_negative.feature.spec.js" time="3.71">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-firefox-ui\attachments\execution-log-d302dee84500e3f30898d70c2fe0fe3fe48ce12a.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #5" classname=".features-gen\firefox\src\features\ui\login_negative.feature.spec.js" time="3.815">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-94581-ssing-credentials-Example-5-firefox-ui\attachments\execution-log-5a91d747ed799a1a1aee38ce01995262cc25db49.log]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name=".features-gen\firefox\src\features\ui\login_positive.feature.spec.js" timestamp="2025-09-25T20:28:42.239Z" hostname="firefox-ui" tests="1" failures="0" skipped="0" time="6.084" errors="0">
+<testcase name="Login with Valid Credentials › Login with valid credentials" classname=".features-gen\firefox\src\features\ui\login_positive.feature.spec.js" time="6.084">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_posi-8925a-ogin-with-valid-credentials-firefox-ui\attachments\execution-log-ffb29d7473c967ceec4c3abcae41d1cde36e860b.log]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name=".features-gen\webkit\src\features\ui\login_negative.feature.spec.js" timestamp="2025-09-25T20:28:42.239Z" hostname="webkit-ui" tests="5" failures="0" skipped="0" time="35.459" errors="0">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #1" classname=".features-gen\webkit\src\features\ui\login_negative.feature.spec.js" time="9.469">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-c9782-ssing-credentials-Example-1-webkit-ui\attachments\execution-log-4b4ea59ba6db8ac87426bd4738058e8ace4b7a28.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #2" classname=".features-gen\webkit\src\features\ui\login_negative.feature.spec.js" time="9.391">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-68b29-ssing-credentials-Example-2-webkit-ui\attachments\execution-log-8b53491bae17adef2680ebf13f08afa7c0b1f130.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #3" classname=".features-gen\webkit\src\features\ui\login_negative.feature.spec.js" time="6.685">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-3c37d-ssing-credentials-Example-3-webkit-ui\attachments\execution-log-a19c09639d5616841d380ae72c4c655ba92fb9d3.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #4" classname=".features-gen\webkit\src\features\ui\login_negative.feature.spec.js" time="5.683">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-webkit-ui\attachments\execution-log-eefd21c4c37ec097409f7d35581105ac1755ac6d.log]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #5" classname=".features-gen\webkit\src\features\ui\login_negative.feature.spec.js" time="4.231">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-94581-ssing-credentials-Example-5-webkit-ui\attachments\execution-log-6cc6d346e0394fdc98ee36411f79a9358fd0114c.log]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name=".features-gen\webkit\src\features\ui\login_positive.feature.spec.js" timestamp="2025-09-25T20:28:42.239Z" hostname="webkit-ui" tests="1" failures="0" skipped="0" time="6.197" errors="0">
+<testcase name="Login with Valid Credentials › Login with valid credentials" classname=".features-gen\webkit\src\features\ui\login_positive.feature.spec.js" time="6.197">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\src-features-ui-login_posi-8925a-ogin-with-valid-credentials-webkit-ui\attachments\execution-log-0c24363b01fc7a8d3f7ae60f3b27d1bb64c36430.log]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

@@ -1,6 +1,9 @@
 import { BasePage } from './BasePage.js';
+import { routes } from '../config/routes.js';
 
 export class LoginPage extends BasePage {
+  static path = routes.login; // ex. 'web/index.php/auth/login'
+
     constructor(page, logger) {
         super(page, logger);
 

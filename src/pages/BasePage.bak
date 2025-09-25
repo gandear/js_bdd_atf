@@ -5,14 +5,12 @@ export class BasePage {
     this.pageName = this.constructor.name;
   }
 
-  // Deschide fie ruta definită pe clasă (static path), fie una primită ca argument.
-  async open(path = this.constructor.path) {
-    const rel = String(path || '').replace(/^\/+/, ''); // forțează rută relativă
-    if (!rel) throw new Error(`${this.pageName}.path is not set`);
-
-    this.log?.action?.(`Open ${rel}`, { page: this.pageName });
-    await this.page.goto(rel); // rezolvat relativ la baseURL din config
-    this.log?.info?.('Navigation complete', { page: this.pageName, url: this.page.url() });
+  async navigateTo(url) {
+    this.log.action(`Navigate to ${url}`, { page: this.pageName });
+    
+    await this.page.goto(url);
+    
+    this.log.info(`Navigation complete`, { page: this.pageName, url: this.page.url() });
   }
 
   async getElementText(selector) {
