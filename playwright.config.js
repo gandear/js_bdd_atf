@@ -69,7 +69,7 @@ export default defineConfig({
     {
       // API (fără artefacte UI)
       ...defineBddProject({
-        name: 'api-bdd',
+        name: 'api',
         features: ['src/features/api/**/*.feature'],
         steps,
         outputDir: '.features-gen/api'
@@ -87,7 +87,7 @@ export default defineConfig({
     // === UI – Chromium / Firefox / WebKit ===
     {
       ...defineBddProject({
-        name: 'chromium-ui',
+        name: 'chromium',
         features: ['src/features/ui/**/*.feature'],
         steps,
         outputDir: '.features-gen/chromium'
@@ -97,7 +97,7 @@ export default defineConfig({
     },
     {
       ...defineBddProject({
-        name: 'firefox-ui',
+        name: 'firefox',
         features: ['src/features/ui/**/*.feature'],
         steps,
         outputDir: '.features-gen/firefox'
@@ -107,7 +107,7 @@ export default defineConfig({
     },
     {
       ...defineBddProject({
-        name: 'webkit-ui',
+        name: 'webkit',
         features: ['src/features/ui/**/*.feature'],
         steps,
         outputDir: '.features-gen/webkit'
