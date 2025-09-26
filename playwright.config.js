@@ -5,11 +5,12 @@ import { defineBddProject } from 'playwright-bdd';
 
 const isCI = !!process.env.CI;
 const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
+const ui_features = ['src/features/**/*.feature'];
 
 // UI baseURL 
 const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com/';
 
-// --- API config (ENV din Jenkins) ---
+// --- API config ---
 const apiBaseURL = (process.env.API_BASE_URL || 'https://reqres.in').replace(/\/$/, '');
 const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
 const apiToken = (process.env.API_TOKEN || '').trim();
@@ -32,7 +33,7 @@ const apiHeaders = {
 // Setări UI comune (compact, CI-friendly)
 const uiUse = {
   baseURL,
-  headless: true,                 // CI-safe; local poți folosi --headed / PWDEBUG=1
+  headless: true,                 
   trace: 'retain-on-failure',
   screenshot: 'only-on-failure',
   video: 'off'
@@ -59,7 +60,7 @@ export default defineConfig({
         'Test Type': 'BDD + Playwright API & UI'
       }
     }],
-    ['./src/utils/cleanup-reporter.js']
+    // ['./src/utils/cleanup-reporter.js']
   ],
 
   // fallback global (UI proiectele pot suprascrie)
@@ -67,7 +68,7 @@ export default defineConfig({
 
   projects: [
     {
-      // API (fără artefacte UI)
+      // API project
       ...defineBddProject({
         name: 'api',
         features: ['src/features/api/**/*.feature'],
@@ -88,7 +89,7 @@ export default defineConfig({
     {
       ...defineBddProject({
         name: 'chromium',
-        features: ['src/features/ui/**/*.feature'],
+        ui_features,
         steps,
         outputDir: '.features-gen/chromium'
       }),
@@ -98,7 +99,7 @@ export default defineConfig({
     {
       ...defineBddProject({
         name: 'firefox',
-        features: ['src/features/ui/**/*.feature'],
+        ui_features,
         steps,
         outputDir: '.features-gen/firefox'
       }),
@@ -108,7 +109,7 @@ export default defineConfig({
     {
       ...defineBddProject({
         name: 'webkit',
-        features: ['src/features/ui/**/*.feature'],
+        ui_features,
         steps,
         outputDir: '.features-gen/webkit'
       }),
