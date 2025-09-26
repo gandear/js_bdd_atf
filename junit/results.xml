@@ -1,54 +1,46 @@
-<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="23.113045000000003">
-<testsuite name=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" timestamp="2025-09-26T15:01:35.067Z" hostname="chromium" tests="5" failures="0" skipped="0" time="31.228" errors="0">
-<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #1" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="9.203">
+<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="16.04005">
+<testsuite name=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" timestamp="2025-09-26T15:09:46.223Z" hostname="chromium" tests="5" failures="0" skipped="0" time="29.374" errors="0">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #1" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="7.646">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-c9782-ssing-credentials-Example-1-chromium\attachments\execution-log-910d5430290e64402e75e1ec78c600a1bb8000c3.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-c9782-ssing-credentials-Example-1-chromium\attachments\execution-log-d70104f52a1ec8c0d69b094ea37408c86ce86ccd.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #2" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="8.882">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #2" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="6.275">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-68b29-ssing-credentials-Example-2-chromium\attachments\execution-log-1143fb1962fcee11e663ee259665e45d373e2eaf.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-68b29-ssing-credentials-Example-2-chromium\attachments\execution-log-8f013dc9ccc9527c0ce23b04588e57c5c2a21926.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #3" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="2.954">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #3" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="6.107">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-3c37d-ssing-credentials-Example-3-chromium\attachments\execution-log-e701a85cf16fd95374ef857f3aa3c3b1099d4be2.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-3c37d-ssing-credentials-Example-3-chromium\attachments\execution-log-69fc3c46fdfa0a848a8a0c090a001b79eed64dd6.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #4" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="7.083">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #4" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="5.339">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\attachments\execution-log-047b86cc704db6756b0a7f5752260e478d758007.log]]
-
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\error-context.md]]
-
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\trace.zip]]
-
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium-retry1\attachments\execution-log-047b86cc704db6756b0a7f5752260e478d758007.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\attachments\execution-log-b36935b581c75ff0cd508a7d3b61f0e24aef96bc.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #5" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="3.106">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #5" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="4.007">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-ui-login_nega-94581-ssing-credentials-Example-5-chromium\attachments\execution-log-dfcc4d805853aef8ad672c7d8b2a07c641848c01.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-94581-ssing-credentials-Example-5-chromium\attachments\execution-log-4da0ba64dcd81ea956b552cdff81a827b5950b4a.log]]
 ]]>
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" timestamp="2025-09-26T15:01:35.067Z" hostname="chromium" tests="1" failures="0" skipped="0" time="4.724" errors="0">
-<testcase name="Login with Valid Credentials › Login with valid credentials" classname=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" time="4.724">
+<testsuite name=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" timestamp="2025-09-26T15:09:46.223Z" hostname="chromium" tests="1" failures="0" skipped="0" time="5.508" errors="0">
+<testcase name="Login with Valid Credentials › Login with valid credentials" classname=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" time="5.508">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-ui-login_posi-8925a-ogin-with-valid-credentials-chromium\attachments\execution-log-23b9e4a51f2c1ff30daa286993fb6a0b811ebf27.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_posi-8925a-ogin-with-valid-credentials-chromium\attachments\execution-log-fb8e3fe6ce8fb24196a2a48b930b1314bbe36bde.log]]
 ]]>
 </system-out>
 </testcase>

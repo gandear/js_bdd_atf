@@ -1,5 +1,5 @@
 // playwright.config.js
-import dotenv from 'dotenv'; dotenv.config({ quiet: true });
+import dotenv from 'dotenv'; dotenv.config({ silent: true });
 import { defineConfig } from '@playwright/test';
 import { defineBddProject } from 'playwright-bdd';
 
