@@ -9,22 +9,22 @@
     
     "test": "npx playwright test",
     
-    "test:api": "npx playwright test --project=api-bdd",
-    "test:api:tag_auth": "npx playwright test --project=api-bdd --grep=@auth",
-    "test:ui": "npx playwright test --project=chromium-ui",
-    "test:ui:all": "set FULL_BROWSER_SUITE=true && npx playwright test --project=chromium-ui --project=firefox-ui --project=webkit-ui",
-    "test:ui:chrome": "npx playwright test --project=chromium-ui",
-    "test:ui:firefox": "set FULL_BROWSER_SUITE=true && npx playwright test --project=firefox-ui",
-    "test:ui:webkit": "set FULL_BROWSER_SUITE=true && npx playwright test --project=webkit-ui",
+    "test:api": "npx playwright test --project=api",
+    "test:api:tag_auth": "npx playwright test --project=api --grep=@auth",
+    "test:ui": "npx playwright test --project=chromium",
+    "test:ui:all": "set FULL_BROWSER_SUITE=true && npx playwright test --project=chromium --project=firefox --project=webkit",
+    "test:ui:chrome": "npx playwright test --project=chromium",
+    "test:ui:firefox": "set FULL_BROWSER_SUITE=true && npx playwright test --project=firefox",
+    "test:ui:webkit": "set FULL_BROWSER_SUITE=true && npx playwright test --project=webkit",
     
     "test:debug": "set DEBUG_TESTS=true && npx playwright test --headed --workers=1",
-    "test:api:debug": "set DEBUG_TESTS=true && npx playwright test --project=api-bdd",
-    "test:ui:debug": "set DEBUG_TESTS=true && npx playwright test --project=chromium-ui --headed --workers=1",
-    
+    "test:api:debug": "set DEBUG_TESTS=true && npx playwright test --project=api",
+    "test:ui:debug": "set DEBUG_TESTS=true && npx playwright test --project=chromium --headed --workers=1",
+
     "test:ci": "set CI=true && npx playwright test",
     
     "test:list": "npx playwright test --list",
-    "test:list:api": "npx playwright test --project=api-bdd --list",
+    "test:list:api": "npx playwright test --project=api --list",
     "test:config": "npx playwright show-config",
     
     "cleanup": "node -e \"const fs=require('fs'); ['test-results','allure-results'].forEach(dir => {try{fs.rmSync(dir,{recursive:true,force:true})}catch(e){}})\"",

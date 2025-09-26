@@ -89,7 +89,7 @@ export default defineConfig({
     {
       ...defineBddProject({
         name: 'chromium',
-        ui_features,
+        features: ui_features,
         steps,
         outputDir: '.features-gen/chromium'
       }),
@@ -99,7 +99,7 @@ export default defineConfig({
     {
       ...defineBddProject({
         name: 'firefox',
-        ui_features,
+        features: ui_features,
         steps,
         outputDir: '.features-gen/firefox'
       }),
@@ -109,7 +109,7 @@ export default defineConfig({
     {
       ...defineBddProject({
         name: 'webkit',
-        ui_features,
+        features: ui_features,
         steps,
         outputDir: '.features-gen/webkit'
       }),
