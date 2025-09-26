@@ -17,4 +17,9 @@ logs/
 .DS_Store
 
 # Backup folder
-BACKUP
+BACKUP/
+
+# reports
+allure-report/
+html-report/
+junit/
