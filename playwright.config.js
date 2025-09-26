@@ -9,15 +9,24 @@ const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
 // UI baseURL 
 const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com/';
 
-// --- API config  ---
-const apiBaseURL   = process.env.API_BASE_URL || 'https://reqres.in/';
+// --- API config (ENV din Jenkins) ---
+const apiBaseURL = (process.env.API_BASE_URL || 'https://reqres.in').replace(/\/$/, '');
 const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
-const apiToken     = process.env.API_TOKEN || '';
+const apiToken = (process.env.API_TOKEN || '').trim();
+const scheme = (process.env.API_AUTH_SCHEME || 'api-key').toLowerCase(); // 'api-key' | 'bearer'
 
-// Nu logăm secretul; doar construim header-ele
+// Politica de atașare (exact ca varianta care era “verde”):
+const disableAuth = String(process.env.API_DISABLE_AUTH || 'false').toLowerCase() === 'true';
+const requireAuth = String(process.env.API_REQUIRE_AUTH || 'false').toLowerCase() === 'true';
+const shouldAttach = !disableAuth && (requireAuth || apiToken.length > 0);
+
 const apiHeaders = {
   'Content-Type': 'application/json',
-  ...(apiToken ? { [apiKeyHeader]: apiToken } : {})
+  ...(shouldAttach
+    ? (scheme === 'bearer'
+        ? { Authorization: `Bearer ${apiToken}` }
+        : { [apiKeyHeader]: apiToken })
+    : {})
 };
 
 // Setări UI comune (compact, CI-friendly)
@@ -57,8 +66,8 @@ export default defineConfig({
   use: { ...uiUse },
 
   projects: [
-    // === API ===
     {
+      // API (fără artefacte UI)
       ...defineBddProject({
         name: 'api-bdd',
         features: ['src/features/api/**/*.feature'],
@@ -67,8 +76,8 @@ export default defineConfig({
       }),
       metadata: { suite: 'API' },
       use: {
-        baseURL: apiBaseURL,          
-        extraHTTPHeaders: apiHeaders, 
+        baseURL: apiBaseURL,
+        extraHTTPHeaders: apiHeaders,
         trace: 'off',
         screenshot: 'off',
         video: 'off'

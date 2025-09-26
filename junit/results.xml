@@ -1,195 +1,195 @@
-<testsuites id="" name="" tests="28" failures="0" skipped="0" errors="0" time="5.221957000000001">
-<testsuite name=".features-gen\api\src\features\api\auth.feature.spec.js" timestamp="2025-09-25T22:29:32.962Z" hostname="api-bdd" tests="9" failures="0" skipped="0" time="2.285" errors="0">
-<testcase name="Auth API › Register with valid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.591">
+<testsuites id="" name="" tests="28" failures="0" skipped="0" errors="0" time="7.154476">
+<testsuite name=".features-gen\api\src\features\api\auth.feature.spec.js" timestamp="2025-09-26T07:47:09.817Z" hostname="api-bdd" tests="9" failures="0" skipped="0" time="2.509" errors="0">
+<testcase name="Auth API › Register with valid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.98">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-3c2a1--with-valid-creds-Example-1-api-bdd\attachments\execution-log-8012196601cfb808a44f20a62df3befa9a3fd9f8.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-3c2a1--with-valid-creds-Example-1-api-bdd\attachments\execution-log-bfefb1cf62e184ae0c553ab8ab06b087c4d8f467.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Register with invalid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.964">
+<testcase name="Auth API › Register with invalid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.659">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-3f687-ith-invalid-creds-Example-1-api-bdd\attachments\execution-log-66995693768c845c3d2b4fd29747888f0b1ac7cb.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-3f687-ith-invalid-creds-Example-1-api-bdd\attachments\execution-log-0691017657b6039fece53bc49dd4e442f24cde08.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Register with invalid creds › Example #2" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.096">
+<testcase name="Auth API › Register with invalid creds › Example #2" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.118">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-7dfe6-ith-invalid-creds-Example-2-api-bdd\attachments\execution-log-cc576c580b8c758bef924eac09ced5407fd5e318.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-7dfe6-ith-invalid-creds-Example-2-api-bdd\attachments\execution-log-d7575a4bfb02d0643de78aa8f9417eff7b8e451d.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Register with invalid creds › Example #3" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.097">
+<testcase name="Auth API › Register with invalid creds › Example #3" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.138">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-c2d59-ith-invalid-creds-Example-3-api-bdd\attachments\execution-log-c04f8b9b4e554f8632a2a85ced67d2a2d1227189.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-c2d59-ith-invalid-creds-Example-3-api-bdd\attachments\execution-log-368682487167aa8e00a7e4875aa8960a5f8f3cd3.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Login with valid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.104">
+<testcase name="Auth API › Login with valid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.117">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-816b4--with-valid-creds-Example-1-api-bdd\attachments\execution-log-7c3e1d4f8a29918a667feb97237bb6ff459642b6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-816b4--with-valid-creds-Example-1-api-bdd\attachments\execution-log-9b64d925520da78861213b926857d5d264dbe3cc.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Login with invalid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.121">
+<testcase name="Auth API › Login with invalid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.113">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-98629-ith-invalid-creds-Example-1-api-bdd\attachments\execution-log-389e3a2913674047bc1b434bddab9c9e299d1fea.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-98629-ith-invalid-creds-Example-1-api-bdd\attachments\execution-log-e89f664bea41025af24746749d3d9d42f3ec8cef.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Login with invalid creds › Example #2" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.098">
+<testcase name="Auth API › Login with invalid creds › Example #2" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.134">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-2c70b-ith-invalid-creds-Example-2-api-bdd\attachments\execution-log-e28e6f98ab93448d8fa45f5605c47315582ba2a8.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-2c70b-ith-invalid-creds-Example-2-api-bdd\attachments\execution-log-523b67215c3033a6ad495997cd4e21890b2f2e66.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Login with invalid creds › Example #3" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.123">
+<testcase name="Auth API › Login with invalid creds › Example #3" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.119">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-265f5-ith-invalid-creds-Example-3-api-bdd\attachments\execution-log-7634725a8d0831f143cf061af89ac923c93fbb2f.log]]
+[[ATTACHMENT|..\test-results\src-features-api-auth.feat-265f5-ith-invalid-creds-Example-3-api-bdd\attachments\execution-log-48b6f80d7317634bdd43d6f6fd75171eac70a7ac.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Authenticate and keep token in client" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.091">
+<testcase name="Auth API › Authenticate and keep token in client" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.131">
 </testcase>
 </testsuite>
-<testsuite name=".features-gen\api\src\features\api\users.feature.spec.js" timestamp="2025-09-25T22:29:32.962Z" hostname="api-bdd" tests="19" failures="0" skipped="0" time="2.176" errors="0">
-<testcase name="Users API › List users for page &lt;page&gt; › List users for page 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.103">
+<testsuite name=".features-gen\api\src\features\api\users.feature.spec.js" timestamp="2025-09-26T07:47:09.817Z" hostname="api-bdd" tests="19" failures="0" skipped="0" time="2.81" errors="0">
+<testcase name="Users API › List users for page &lt;page&gt; › List users for page 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.174">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-32e77--page-List-users-for-page-1-api-bdd\attachments\execution-log-9c48918658aeed79e08c39ccf7a59db246504693.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-32e77--page-List-users-for-page-1-api-bdd\attachments\execution-log-75578beb19dbb830d3cb62d2a30c2229618c6af2.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › List users for page &lt;page&gt; › List users for page 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.102">
+<testcase name="Users API › List users for page &lt;page&gt; › List users for page 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.1">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-b0bbf--page-List-users-for-page-2-api-bdd\attachments\execution-log-9c48918658aeed79e08c39ccf7a59db246504693.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-b0bbf--page-List-users-for-page-2-api-bdd\attachments\execution-log-75578beb19dbb830d3cb62d2a30c2229618c6af2.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.081">
+<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.127">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-c6e96-d-Get-existing-user-by-id-1-api-bdd\attachments\execution-log-d248cd5f08cea93b6d357e7902dcd2b8ec656cd6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-c6e96-d-Get-existing-user-by-id-1-api-bdd\attachments\execution-log-8e27363ff8e5172bc3a0d7e5aed0f1d2d8aacfb1.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.072">
+<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.082">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-65c42-d-Get-existing-user-by-id-2-api-bdd\attachments\execution-log-d248cd5f08cea93b6d357e7902dcd2b8ec656cd6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-65c42-d-Get-existing-user-by-id-2-api-bdd\attachments\execution-log-8e27363ff8e5172bc3a0d7e5aed0f1d2d8aacfb1.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 3" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.073">
+<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 3" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.079">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-0273e-d-Get-existing-user-by-id-3-api-bdd\attachments\execution-log-d248cd5f08cea93b6d357e7902dcd2b8ec656cd6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-0273e-d-Get-existing-user-by-id-3-api-bdd\attachments\execution-log-8e27363ff8e5172bc3a0d7e5aed0f1d2d8aacfb1.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 4" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.071">
+<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 4" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.162">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-c7a51-d-Get-existing-user-by-id-4-api-bdd\attachments\execution-log-d248cd5f08cea93b6d357e7902dcd2b8ec656cd6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-c7a51-d-Get-existing-user-by-id-4-api-bdd\attachments\execution-log-8e27363ff8e5172bc3a0d7e5aed0f1d2d8aacfb1.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 5" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.065">
+<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 5" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.143">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-c0f28-d-Get-existing-user-by-id-5-api-bdd\attachments\execution-log-d248cd5f08cea93b6d357e7902dcd2b8ec656cd6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-c0f28-d-Get-existing-user-by-id-5-api-bdd\attachments\execution-log-8e27363ff8e5172bc3a0d7e5aed0f1d2d8aacfb1.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 6" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.083">
+<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 6" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.13">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-3e2b9-d-Get-existing-user-by-id-6-api-bdd\attachments\execution-log-d248cd5f08cea93b6d357e7902dcd2b8ec656cd6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-3e2b9-d-Get-existing-user-by-id-6-api-bdd\attachments\execution-log-8e27363ff8e5172bc3a0d7e5aed0f1d2d8aacfb1.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 23" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.143">
+<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 23" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.183">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-d98f7--non-existing-user-by-id-23-api-bdd\attachments\execution-log-a5d84ab7817bc4005357e1b3f185e0f045ef0c77.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-d98f7--non-existing-user-by-id-23-api-bdd\attachments\execution-log-4bad7ee2538894efd03517a04f4c65e8fa9b6888.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 999" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.136">
+<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 999" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.194">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-48c20-non-existing-user-by-id-999-api-bdd\attachments\execution-log-a5d84ab7817bc4005357e1b3f185e0f045ef0c77.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-48c20-non-existing-user-by-id-999-api-bdd\attachments\execution-log-4bad7ee2538894efd03517a04f4c65e8fa9b6888.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 0" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.176">
+<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 0" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.193">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-f4747-t-non-existing-user-by-id-0-api-bdd\attachments\execution-log-a5d84ab7817bc4005357e1b3f185e0f045ef0c77.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-f4747-t-non-existing-user-by-id-0-api-bdd\attachments\execution-log-4bad7ee2538894efd03517a04f4c65e8fa9b6888.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id -1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.189">
+<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id -1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.188">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-ccdb8--non-existing-user-by-id--1-api-bdd\attachments\execution-log-a5d84ab7817bc4005357e1b3f185e0f045ef0c77.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-ccdb8--non-existing-user-by-id--1-api-bdd\attachments\execution-log-4bad7ee2538894efd03517a04f4c65e8fa9b6888.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Create a random user" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.176">
+<testcase name="Users API › Create a random user" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.24">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-bd171-rs-API-Create-a-random-user-api-bdd\attachments\execution-log-d0c2c3f284dc2da7d8567ed1956cfeba5793db3f.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-bd171-rs-API-Create-a-random-user-api-bdd\attachments\execution-log-e5ce4a7cf9ed25606e28decb6689f0e28075460e.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 1 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.163">
+<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 1 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.215">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-3ebfc-pdate-user-1-with-a-new-job-api-bdd\attachments\execution-log-17c52faa70d09d9934502928b3a1b18cfa1f3b85.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-3ebfc-pdate-user-1-with-a-new-job-api-bdd\attachments\execution-log-cf04edb63ecf5df8bf9573bb6e2ce50dad429045.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 2 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.107">
+<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 2 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.124">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-f1c9b-pdate-user-2-with-a-new-job-api-bdd\attachments\execution-log-17c52faa70d09d9934502928b3a1b18cfa1f3b85.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-f1c9b-pdate-user-2-with-a-new-job-api-bdd\attachments\execution-log-cf04edb63ecf5df8bf9573bb6e2ce50dad429045.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 3 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.14">
+<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 3 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.137">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-f0c0d-pdate-user-3-with-a-new-job-api-bdd\attachments\execution-log-17c52faa70d09d9934502928b3a1b18cfa1f3b85.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-f0c0d-pdate-user-3-with-a-new-job-api-bdd\attachments\execution-log-cf04edb63ecf5df8bf9573bb6e2ce50dad429045.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Delete user &lt;id&gt; › Delete user 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.092">
+<testcase name="Users API › Delete user &lt;id&gt; › Delete user 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.125">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-5f0e7-elete-user-id-Delete-user-1-api-bdd\attachments\execution-log-a3f99ac07366d8c2fa730de2c14899f3415792d6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-5f0e7-elete-user-id-Delete-user-1-api-bdd\attachments\execution-log-b8570a93f91a679671198c2b757908c209769d90.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Delete user &lt;id&gt; › Delete user 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.112">
+<testcase name="Users API › Delete user &lt;id&gt; › Delete user 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.108">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-a697e-elete-user-id-Delete-user-2-api-bdd\attachments\execution-log-a3f99ac07366d8c2fa730de2c14899f3415792d6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-a697e-elete-user-id-Delete-user-2-api-bdd\attachments\execution-log-b8570a93f91a679671198c2b757908c209769d90.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Users API › Delete user &lt;id&gt; › Delete user 3" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.092">
+<testcase name="Users API › Delete user &lt;id&gt; › Delete user 3" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.106">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-b19de-elete-user-id-Delete-user-3-api-bdd\attachments\execution-log-a3f99ac07366d8c2fa730de2c14899f3415792d6.log]]
+[[ATTACHMENT|..\test-results\src-features-api-users.fea-b19de-elete-user-id-Delete-user-3-api-bdd\attachments\execution-log-b8570a93f91a679671198c2b757908c209769d90.log]]
 ]]>
 </system-out>
 </testcase>
