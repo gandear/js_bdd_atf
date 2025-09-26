@@ -5,7 +5,10 @@ import { defineBddProject } from 'playwright-bdd';
 
 const isCI = !!process.env.CI;
 const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
-const ui_features = ['src/features/**/*.feature'];
+
+// Separare clară între feature-uri API și UI
+const ui_features = ['src/features/ui/**/*.feature'];
+const api_features = ['src/features/api/**/*.feature'];
 
 // UI baseURL 
 const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com/';
@@ -16,7 +19,7 @@ const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
 const apiToken = (process.env.API_TOKEN || '').trim();
 const scheme = (process.env.API_AUTH_SCHEME || 'api-key').toLowerCase(); // 'api-key' | 'bearer'
 
-// Politica de atașare (exact ca varianta care era “verde”):
+// Politica de atașare (exact ca varianta care era "verde"):
 const disableAuth = String(process.env.API_DISABLE_AUTH || 'false').toLowerCase() === 'true';
 const requireAuth = String(process.env.API_REQUIRE_AUTH || 'false').toLowerCase() === 'true';
 const shouldAttach = !disableAuth && (requireAuth || apiToken.length > 0);
@@ -68,10 +71,10 @@ export default defineConfig({
 
   projects: [
     {
-      // API project
+      // API project - doar testele API
       ...defineBddProject({
         name: 'api',
-        features: ['src/features/api/**/*.feature'],
+        features: api_features,
         steps,
         outputDir: '.features-gen/api'
       }),
@@ -85,7 +88,7 @@ export default defineConfig({
       }
     },
 
-    // === UI – Chromium / Firefox / WebKit ===
+    // === UI – Chromium / Firefox / WebKit - doar testele UI ===
     {
       ...defineBddProject({
         name: 'chromium',

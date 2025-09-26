@@ -1,195 +1,54 @@
-<testsuites id="" name="" tests="28" failures="0" skipped="0" errors="0" time="6.558167">
-<testsuite name=".features-gen\api\src\features\api\auth.feature.spec.js" timestamp="2025-09-26T14:49:09.751Z" hostname="api" tests="9" failures="0" skipped="0" time="1.971" errors="0">
-<testcase name="Auth API › Register with valid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.566">
+<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="23.113045000000003">
+<testsuite name=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" timestamp="2025-09-26T15:01:35.067Z" hostname="chromium" tests="5" failures="0" skipped="0" time="31.228" errors="0">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #1" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="9.203">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-3c2a1--with-valid-creds-Example-1-api\attachments\execution-log-1e372f9363b478b09f4bf885cc7c20087273a70f.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-c9782-ssing-credentials-Example-1-chromium\attachments\execution-log-910d5430290e64402e75e1ec78c600a1bb8000c3.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Register with invalid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.588">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #2" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="8.882">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-3f687-ith-invalid-creds-Example-1-api\attachments\execution-log-bb2155aad276008850691d06403d557a59d4ccf6.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-68b29-ssing-credentials-Example-2-chromium\attachments\execution-log-1143fb1962fcee11e663ee259665e45d373e2eaf.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Register with invalid creds › Example #2" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.101">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #3" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="2.954">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-7dfe6-ith-invalid-creds-Example-2-api\attachments\execution-log-5d35a49c1dbd9b3c1af1f417d033e9d5fb323b8a.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-3c37d-ssing-credentials-Example-3-chromium\attachments\execution-log-e701a85cf16fd95374ef857f3aa3c3b1099d4be2.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Register with invalid creds › Example #3" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.107">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #4" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="7.083">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-c2d59-ith-invalid-creds-Example-3-api\attachments\execution-log-09baf75f0e16fc05fb7de52149620dfa8fb3c115.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\attachments\execution-log-047b86cc704db6756b0a7f5752260e478d758007.log]]
+
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\error-context.md]]
+
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium\trace.zip]]
+
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-81f2e-ssing-credentials-Example-4-chromium-retry1\attachments\execution-log-047b86cc704db6756b0a7f5752260e478d758007.log]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Auth API › Login with valid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.151">
+<testcase name="Login with Invalid or Missing Credentials › Login attempt with invalid or missing credentials › Example #5" classname=".features-gen\chromium\src\features\ui\login_negative.feature.spec.js" time="3.106">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-816b4--with-valid-creds-Example-1-api\attachments\execution-log-262dc550818e0a952a8aac0fe0e04207da868b44.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_nega-94581-ssing-credentials-Example-5-chromium\attachments\execution-log-dfcc4d805853aef8ad672c7d8b2a07c641848c01.log]]
 ]]>
 </system-out>
-</testcase>
-<testcase name="Auth API › Login with invalid creds › Example #1" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.13">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-98629-ith-invalid-creds-Example-1-api\attachments\execution-log-c32bd5c7cf4d9fdd188d926c639c0170e90711f9.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Auth API › Login with invalid creds › Example #2" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.11">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-2c70b-ith-invalid-creds-Example-2-api\attachments\execution-log-eca49e0eeae1069ea5dd04b866cb71b68e619dfe.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Auth API › Login with invalid creds › Example #3" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.106">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-auth.feat-265f5-ith-invalid-creds-Example-3-api\attachments\execution-log-b51e463e1fcc65a4a6d6470d65595da3f86b8b7b.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Auth API › Authenticate and keep token in client" classname=".features-gen\api\src\features\api\auth.feature.spec.js" time="0.112">
 </testcase>
 </testsuite>
-<testsuite name=".features-gen\api\src\features\api\users.feature.spec.js" timestamp="2025-09-26T14:49:09.751Z" hostname="api" tests="19" failures="0" skipped="0" time="2.324" errors="0">
-<testcase name="Users API › List users for page &lt;page&gt; › List users for page 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.088">
+<testsuite name=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" timestamp="2025-09-26T15:01:35.067Z" hostname="chromium" tests="1" failures="0" skipped="0" time="4.724" errors="0">
+<testcase name="Login with Valid Credentials › Login with valid credentials" classname=".features-gen\chromium\src\features\ui\login_positive.feature.spec.js" time="4.724">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-32e77--page-List-users-for-page-1-api\attachments\execution-log-6928433dc32fac2e78377e3b6a0b13a2ef62474a.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › List users for page &lt;page&gt; › List users for page 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.16">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-b0bbf--page-List-users-for-page-2-api\attachments\execution-log-6928433dc32fac2e78377e3b6a0b13a2ef62474a.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.113">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-c6e96-d-Get-existing-user-by-id-1-api\attachments\execution-log-1f2e75759ca0690256bef056ad0d88b147e1007c.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.132">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-65c42-d-Get-existing-user-by-id-2-api\attachments\execution-log-1f2e75759ca0690256bef056ad0d88b147e1007c.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 3" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.087">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-0273e-d-Get-existing-user-by-id-3-api\attachments\execution-log-1f2e75759ca0690256bef056ad0d88b147e1007c.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 4" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.109">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-c7a51-d-Get-existing-user-by-id-4-api\attachments\execution-log-1f2e75759ca0690256bef056ad0d88b147e1007c.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 5" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.096">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-c0f28-d-Get-existing-user-by-id-5-api\attachments\execution-log-1f2e75759ca0690256bef056ad0d88b147e1007c.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get existing user by id &lt;id&gt; › Get existing user by id 6" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.085">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-3e2b9-d-Get-existing-user-by-id-6-api\attachments\execution-log-1f2e75759ca0690256bef056ad0d88b147e1007c.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 23" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.123">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-d98f7--non-existing-user-by-id-23-api\attachments\execution-log-329508c2a516e1280940daa377cc3c5055cfd351.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 999" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.109">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-48c20-non-existing-user-by-id-999-api\attachments\execution-log-329508c2a516e1280940daa377cc3c5055cfd351.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id 0" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.191">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-f4747-t-non-existing-user-by-id-0-api\attachments\execution-log-329508c2a516e1280940daa377cc3c5055cfd351.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Get non-existing user by id &lt;id&gt; › Get non-existing user by id -1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.145">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-ccdb8--non-existing-user-by-id--1-api\attachments\execution-log-329508c2a516e1280940daa377cc3c5055cfd351.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Create a random user" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.202">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-bd171-rs-API-Create-a-random-user-api\attachments\execution-log-5c0b992a02459ee846d36947b7d70b9d2321ef65.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 1 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.12">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-3ebfc-pdate-user-1-with-a-new-job-api\attachments\execution-log-010ce785c0f0f4ef82ed3e1631ae6053889efdba.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 2 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.117">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-f1c9b-pdate-user-2-with-a-new-job-api\attachments\execution-log-010ce785c0f0f4ef82ed3e1631ae6053889efdba.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Update user &lt;id&gt; with a new job › Update user 3 with a new job" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.138">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-f0c0d-pdate-user-3-with-a-new-job-api\attachments\execution-log-010ce785c0f0f4ef82ed3e1631ae6053889efdba.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Delete user &lt;id&gt; › Delete user 1" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.116">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-5f0e7-elete-user-id-Delete-user-1-api\attachments\execution-log-8fb9ad7ccf11f8af844d38692b74a0f0f84c3639.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Delete user &lt;id&gt; › Delete user 2" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.092">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-a697e-elete-user-id-Delete-user-2-api\attachments\execution-log-8fb9ad7ccf11f8af844d38692b74a0f0f84c3639.log]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Users API › Delete user &lt;id&gt; › Delete user 3" classname=".features-gen\api\src\features\api\users.feature.spec.js" time="0.101">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\src-features-api-users.fea-b19de-elete-user-id-Delete-user-3-api\attachments\execution-log-8fb9ad7ccf11f8af844d38692b74a0f0f84c3639.log]]
+[[ATTACHMENT|..\test-results\src-features-ui-login_posi-8925a-ogin-with-valid-credentials-chromium\attachments\execution-log-23b9e4a51f2c1ff30daa286993fb6a0b811ebf27.log]]
 ]]>
 </system-out>
 </testcase>
