@@ -8,72 +8,72 @@ const { When, Then } = createBdd(test);
 
 /* -------- REGISTER -------- */
 When('I register with email {string} and password {string}',
-  async ({ apiClient, apiState, log }, email, password) => {
+  async ({ apiClient, testState, log }, email, password) => {
     await test.step('POST /api/register', async () => {
       log.step('POST /api/register', { email });
       const { res, json } = await apiClient.register({ email, password });
       log.info('HTTP response', { status: res.status(), url: res.url() });
-      apiState.res = res; apiState.json = json; apiState.error = null;
+      testState.res = res; testState.json = json; testState.error = null;
     });
   }
 );
 
-Then('registration succeeds', async ({ apiState, log }) => {
+Then('registration succeeds', async ({ testState, log }) => {
   try {
     log.action('Assert register 200');
-    expect(apiState.res.status()).toBe(200);
-    SchemaValidator.assert(authResponseSchema, apiState.json);
+    expect(testState.res.status()).toBe(200);
+    SchemaValidator.assert(authResponseSchema, testState.json);
     log.info('Register OK');
   } catch (e) {
-    log.error('Register assertion failed', { status: apiState.res?.status?.(), url: apiState.res?.url?.() });
+    log.error('Register assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
     throw e;
   }
 });
 
-Then('registration fails with an error', async ({ apiState, log }) => {
+Then('registration fails with an error', async ({ testState, log }) => {
   try {
     log.action('Assert register >=400');
-    expect(apiState.res.status()).toBeGreaterThanOrEqual(400);
-    SchemaValidator.assert(errorResponseSchema, apiState.json);
+    expect(testState.res.status()).toBeGreaterThanOrEqual(400);
+    SchemaValidator.assert(errorResponseSchema, testState.json);
     log.info('Register negative OK');
   } catch (e) {
-    log.error('Register negative assertion failed', { status: apiState.res?.status?.(), url: apiState.res?.url?.() });
+    log.error('Register negative assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
     throw e;
   }
 });
 
 /* -------- LOGIN -------- */
 When('I login with email {string} and password {string}',
-  async ({ apiClient, apiState, log }, email, password) => {
+  async ({ apiClient, testState, log }, email, password) => {
     await test.step('POST /api/login', async () => {
       log.step('POST /api/login', { email });
       const { res, json } = await apiClient.login({ email, password });
       log.info('HTTP response', { status: res.status(), url: res.url() });
-      apiState.res = res; apiState.json = json; apiState.error = null;
+      testState.res = res; testState.json = json; testState.error = null;
     });
   }
 );
 
-Then('login succeeds', async ({ apiState, log }) => {
+Then('login succeeds', async ({ testState, log }) => {
   try {
     log.action('Assert login 200');
-    expect(apiState.res.status()).toBe(200);
-    SchemaValidator.assert(authResponseSchema, apiState.json);
-    log.info('Login OK', { hasToken: !!apiState.json?.token });
+    expect(testState.res.status()).toBe(200);
+    SchemaValidator.assert(authResponseSchema, testState.json);
+    log.info('Login OK', { hasToken: !!testState.json?.token });
   } catch (e) {
-    log.error('Login assertion failed', { status: apiState.res?.status?.(), url: apiState.res?.url?.() });
+    log.error('Login assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
     throw e;
   }
 });
 
-Then('login fails with an error', async ({ apiState, log }) => {
+Then('login fails with an error', async ({ testState, log }) => {
   try {
     log.action('Assert login >=400');
-    expect(apiState.res.status()).toBeGreaterThanOrEqual(400);
-    SchemaValidator.assert(errorResponseSchema, apiState.json);
+    expect(testState.res.status()).toBeGreaterThanOrEqual(400);
+    SchemaValidator.assert(errorResponseSchema, testState.json);
     log.info('Login negative OK');
   } catch (e) {
-    log.error('Login negative assertion failed', { status: apiState.res?.status?.(), url: apiState.res?.url?.() });
+    log.error('Login negative assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
     throw e;
   }
 });

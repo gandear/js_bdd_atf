@@ -1,4 +1,4 @@
-// src/fixtures/ui.fixture.js (SIMPLIFICAT MAXIMAL)
+// src/fixtures/ui.fixture.js
 import { LoginPage } from '../pages/LoginPage.js';
 import { DashboardPage } from '../pages/DashboardPage.js';
 
