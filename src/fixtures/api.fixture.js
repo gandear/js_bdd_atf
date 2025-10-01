@@ -15,14 +15,6 @@ export const apiFixtures = {
     await use(new ApiClient(apiRequest));
   },
 
-  // apiState: async ({ }, use) => {
-  //   await use({ res: null, json: null, error: null });
-  // },
-
-  apiState: async ({ testState }, use) => {
-      await use(testState);
-  },
-
   testDataManager: async ({ apiClient }, use, testInfo) => {
     const manager = new TestDataManager(apiClient);
     await use(manager);
