@@ -1,6 +1,13 @@
 // src/api/schemas/schemas.js
 
-// Schema pentru user/product (ReqRes.in now returns products instead of users)
+// ============================================================================
+// BASE SCHEMAS
+// ============================================================================
+
+/**
+ * Base user/product schema
+ * Note: ReqRes.in now returns products (colors) instead of actual users
+ */
 export const userSchema = {
   type: 'object',
   required: ['id', 'name', 'year', 'color', 'pantone_value'],
@@ -14,7 +21,14 @@ export const userSchema = {
   additionalProperties: true
 };
 
-// Schema pentru lista de users (GET /api/users?page=)
+// ============================================================================
+// GET ENDPOINTS - Response schemas
+// ============================================================================
+
+/**
+ * GET /api/users?page={page}
+ * Returns paginated list of users
+ */
 export const usersResponseSchema = {
   type: 'object',
   required: ['page', 'per_page', 'total', 'total_pages', 'data'],
@@ -28,8 +42,11 @@ export const usersResponseSchema = {
   additionalProperties: true
 };
 
-// Schema pentru single user response (GET /api/users/{id})
-export const singleUserResponseSchema_alt = {
+/**
+ * GET /api/users/{id}
+ * Returns single user details
+ */
+export const singleUserResponseSchema = {
   type: 'object',
   required: ['data'],
   properties: { 
@@ -38,7 +55,14 @@ export const singleUserResponseSchema_alt = {
   additionalProperties: true
 };
 
-// Schema pentru user creat (POST /api/users)
+// ============================================================================
+// POST/PUT ENDPOINTS - Response schemas
+// ============================================================================
+
+/**
+ * POST /api/users
+ * Returns created user with generated id and timestamp
+ */
 export const createdUserSchema = {
   type: 'object',
   required: ['name', 'job', 'id', 'createdAt'],
@@ -51,7 +75,10 @@ export const createdUserSchema = {
   additionalProperties: true
 };
 
-// Schema pentru user actualizat (PUT /api/users/{id})
+/**
+ * PUT /api/users/{id}
+ * Returns updated user with timestamp
+ */
 export const updatedUserSchema = {
   type: 'object',
   required: ['name', 'job', 'updatedAt'],
@@ -63,7 +90,15 @@ export const updatedUserSchema = {
   additionalProperties: true
 };
 
-// Schema pentru autentificare reușită (POST /api/login, /api/register)
+// ============================================================================
+// AUTH ENDPOINTS - Response schemas
+// ============================================================================
+
+/**
+ * POST /api/login
+ * POST /api/register
+ * Returns authentication token on success
+ */
 export const authResponseSchema = {
   type: 'object',
   required: ['token'],
@@ -73,7 +108,14 @@ export const authResponseSchema = {
   additionalProperties: true
 };
 
-// Schema pentru erori (400, 404, etc.)
+// ============================================================================
+// ERROR SCHEMAS
+// ============================================================================
+
+/**
+ * Generic error response (400, 404, etc.)
+ * Returns error message
+ */
 export const errorResponseSchema = {
   type: 'object',
   required: ['error'],
@@ -82,6 +124,3 @@ export const errorResponseSchema = {
   },
   additionalProperties: true
 };
-
-// Alias pentru compatibilitate (dacă e folosit în alte locuri)
-export const singleUserResponseSchema = singleUserResponseSchema_alt;

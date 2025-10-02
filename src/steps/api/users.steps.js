@@ -4,7 +4,7 @@ import { test, expect } from '../../fixtures/index.js';
 import { SchemaValidator } from '../../api/helpers/schemaValidator.js';
 import {
   usersResponseSchema,
-  singleUserResponseSchema_alt as singleUserResponseSchema,
+  singleUserResponseSchema,
   createdUserSchema,
   updatedUserSchema
 } from '../../api/schemas/schemas.js';
