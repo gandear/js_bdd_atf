@@ -13,7 +13,7 @@ function normalizeExampleLabel(s = '') {
 }
 
 export function buildTestName(testInfo, opts = {}) {
-  const sep = opts.sep ?? '_';
+  const separator = opts.separator ?? '_';
   const path = getTitlePath(testInfo);                 // ex: ["Login", "Login with Invalid...", "Example 1"]
   const last = path[path.length - 1] || '';
   const prev = path[path.length - 2] || '';
@@ -21,7 +21,7 @@ export function buildTestName(testInfo, opts = {}) {
   const example = normalizeExampleLabel(last);
   const scenario = prev || last || testInfo.title || 'test';
 
-  let name = example ? `${scenario}${sep}${example}` : scenario;
+  let name = example ? `${scenario}${separator}${example}` : scenario;
 
   return name;
 }
