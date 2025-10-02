@@ -1,5 +1,5 @@
 // playwright.config.js
-import dotenv from 'dotenv'; dotenv.config({ silent: true });
+import dotenv from 'dotenv'; dotenv.config({ quiet: true });
 import { defineConfig } from '@playwright/test';
 import { defineBddProject } from 'playwright-bdd';
 
@@ -36,6 +36,10 @@ const apiHeaders = {
 // Setări UI comune (compact, CI-friendly)
 const uiUse = {
   baseURL,
+  locale: 'en-US',
+    extraHTTPHeaders: {
+      'Accept-Language': 'en-US,en;q=0.9'
+    },
   headless: true,                 
   trace: 'retain-on-failure',
   screenshot: 'only-on-failure',
