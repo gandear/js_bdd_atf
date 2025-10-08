@@ -50,7 +50,7 @@ export default defineConfig({
   // stabilitate în CI
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
-  workers: isCI ? 2 : undefined,
+  workers: isCI ? 4 : undefined,
 
   timeout: 30_000,
   expect: { timeout: 5_000 },
