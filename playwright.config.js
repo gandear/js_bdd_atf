@@ -59,7 +59,8 @@ export default defineConfig({
 
   reporter: [
     ['list'],
-    ['junit', { outputFile: 'test-results/junit.xml' }],
+    ['junit', { 
+      outputFile: process.env.PLAYWRIGHT_JUNIT_OUTPUT_NAME || 'junit-results/results.xml' }],
     ['allure-playwright', {
       outputFolder: process.env.ALLURE_RESULTS_DIR || 'allure-results',
       environmentInfo: {
