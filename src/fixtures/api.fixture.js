@@ -6,13 +6,8 @@ import { TestDataManager } from '../api/helpers/testDataManager.js';
 export const apiFixtures = {
   ...testStateFixtures, // Include testState fixture
 
-  // Uses the Playwright APIRequestContext already configured in playwright.config.js
-  apiRequest: async ({ request }, use) => {
-    await use(request);
-  },
-
-  apiClient: async ({ apiRequest }, use) => {
-    await use(new ApiClient(apiRequest));
+  apiClient: async ({ request }, use) => {
+    await use(new ApiClient(request));
   },
 
   testDataManager: async ({ apiClient }, use, testInfo) => {

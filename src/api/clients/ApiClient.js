@@ -4,7 +4,8 @@ export class ApiClient {
     this.request = request;
     this.authToken = null; // for endpoints requiring auth
   }
-  setAuthToken(t) { this.authToken = t; }
+
+  setAuthToken(token) { this.authToken = token; }
 
   async loginAndSetToken(creds) {
     const { res, json } = await this.login(creds); // POST /api/login
@@ -12,7 +13,7 @@ export class ApiClient {
     return { res, json };
   }
 
-  opts({ data, headers } = {}) {
+  getRequestOptions({ data, headers } = {}) {
     return {
       data,
       headers: this.authToken
@@ -22,17 +23,17 @@ export class ApiClient {
     };
   }
   
-  async  handle(p) {
-    const res = await p;
-    const ct = res.headers()['content-type'] ?? '';
-    const json = ct.includes('application/json') ? await res.json() : null;
+  async  processResponse(promise) {
+    const res = await promise;
+    const contentType = res.headers()['content-type'] ?? '';
+    const json = contentType.includes('application/json') ? await res.json() : null;
     return { res, json };
   }
 
-  get(path, headers)         { return this.handle(this.request.get(path, this.opts({ headers }))); }
-  post(path, data, headers)  { return this.handle(this.request.post(path, this.opts({ data, headers }))); }
-  put(path, data, headers)   { return this.handle(this.request.put(path, this.opts({ data, headers }))); }
-  delete(path, headers)      { return this.handle(this.request.delete(path, this.opts({ headers }))); }
+  get(path, headers)         { return this.processResponse(this.request.get(path, this.getRequestOptions({ headers }))); }
+  post(path, data, headers)  { return this.processResponse(this.request.post(path, this.getRequestOptions({ data, headers }))); }
+  put(path, data, headers)   { return this.processResponse(this.request.put(path, this.getRequestOptions({ data, headers }))); }
+  delete(path, headers)      { return this.processResponse(this.request.delete(path, this.getRequestOptions({ headers }))); }
 
   // Endpoints
   getUsers(page=1)   { return this.get(`/api/users?page=${page}`); }
