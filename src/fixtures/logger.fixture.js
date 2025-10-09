@@ -3,7 +3,7 @@ import { createLogger } from '../utils/logger.js';
 import { buildTestName } from '../utils/test-name.js';
 
 export const loggerFixtures = {
-  log: async ({}, use, testInfo) => {
+  logger: async ({}, use, testInfo) => {
     const logger = createLogger({
       project: testInfo.project.name,
       testName: buildTestName(testInfo, { sep: '_' }),

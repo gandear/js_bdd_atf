@@ -8,7 +8,7 @@ export class DashboardPage extends BasePage {
     }
 
     async isDashboardVisible() {
-        this.log.info(`Checking if the dashboard is visible ...`, { page: this.pageName } );
+        this.logger.info(`Checking if the dashboard is visible ...`, { page: this.pageName } );
         return await this.isElementVisible(this.dashboardSelector);
     }
 }

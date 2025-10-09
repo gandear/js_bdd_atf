@@ -1,7 +1,7 @@
 export class BasePage {
     constructor(page, logger) {
     this.page = page;
-    this.log = logger;
+    this.logger = logger;
     this.pageName = this.constructor.name;
   }
 
@@ -10,23 +10,23 @@ export class BasePage {
     const rel = String(path || '').replace(/^\/+/, ''); // forțează rută relativă
     if (!rel) throw new Error(`${this.pageName}.path is not set`);
 
-    this.log?.action?.(`Open ${rel}`, { page: this.pageName });
+    this.logger?.action?.(`Open ${rel}`, { page: this.pageName });
     await this.page.goto(rel); // rezolvat relativ la baseURL din config
-    this.log?.info?.('Navigation complete', { page: this.pageName, url: this.page.url() });
+    this.logger?.info?.('Navigation complete', { page: this.pageName, url: this.page.url() });
   }
 
   async getElementText(selector) {
-    this.log.debug(`Get text from ${selector}`, { page: this.pageName });
+    this.logger.debug(`Get text from ${selector}`, { page: this.pageName });
     return await this.page.textContent(selector);
   }
 
   async clickElement(selector) {
-    this.log.action(`Click element: ${selector}`, { page: this.pageName });
+    this.logger.action(`Click element: ${selector}`, { page: this.pageName });
     await this.page.click(selector);
   }
 
   async typeIntoField(selector, text) {
-    this.log.action(`Type into field: ${selector}`, { 
+    this.logger.action(`Type into field: ${selector}`, { 
       page: this.pageName, 
       text_length: text.length 
     });
@@ -54,7 +54,7 @@ export class BasePage {
     // For example, you can now add logging to other methods:
     async getElementText(selector) {
         const text = await this.page.textContent(selector);
-        this.log.info({
+        this.logger.info({
         action: 'getElementText',
         page: this.pageName,
         selector,

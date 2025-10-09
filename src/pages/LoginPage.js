@@ -18,23 +18,23 @@ export class LoginPage extends BasePage {
     }
 
   async login(username, password) {
-    this.log.step(`Login attempt with username: ${username}`);
+    this.logger.step(`Login attempt with username: ${username}`);
     
     if (username !== undefined) {
       await this.typeIntoField(this.usernameField, username);
-      this.log.debug('Username entered');
+      this.logger.debug('Username entered');
     }
     
     if (password !== undefined) {
       await this.typeIntoField(this.passwordField, password);
-      this.log.debug('Password entered');
+      this.logger.debug('Password entered');
     }
 
     // Trigger blur pentru validări
     await this.page.click(this.usernameField);
     await this.page.click(this.passwordField);
     
-    this.log.action('Submit login form');
+    this.logger.action('Submit login form');
     await this.clickElement(this.loginButton);
   }
 

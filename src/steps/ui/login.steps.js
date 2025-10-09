@@ -7,14 +7,14 @@ import { expect } from '@playwright/test';
 export const { Given, When, Then, Before, After } = createBdd(test);
 
 // Given steps
-Given('I am on the OrangeHRM login page', async ({ loginPage, log }) => {
-  log.step('Navigate to OrangeHRM login page');
+Given('I am on the OrangeHRM login page', async ({ loginPage, logger }) => {
+  logger.step('Navigate to OrangeHRM login page');
   await loginPage.open();
 });
 
 // When steps
-When('I log in with username {string} and password {string}', async ({ loginPage, log }, username, password) => {
-  log.step(`Attempt login with credentials`, { username, password: '***' });
+When('I log in with username {string} and password {string}', async ({ loginPage, logger }, username, password) => {
+  logger.step(`Attempt login with credentials`, { username, password: '***' });
   await loginPage.login(username, password);
 });
 
@@ -24,9 +24,9 @@ Then('I should see the dashboard', async ({ dashboardPage }) => {
   expect(isDashboardVisible).toBe(true);
 });
 
-Then('I should see the error message {string}', async ({ loginPage, log }, expected) => {
+Then('I should see the error message {string}', async ({ loginPage, logger }, expected) => {
   // Use the 'log' fixture to record information about this step.
-  log.info(`Checking for error message: "${expected}"`);
+  logger.info(`Checking for error message: "${expected}"`);
   
   if (expected.toLowerCase() === 'required') {
     // Check for messages next to the input fields.
@@ -42,7 +42,7 @@ Then('I should see the error message {string}', async ({ loginPage, log }, expec
   }
 });
 
-Then('I should see required field errors', async ({ loginPage }) => {
-  const isRequiredErrorDisplayed = await loginPage.isRequiredFieldErrorDisplayed();
-  expect(isRequiredErrorDisplayed).toBe(true);
-});
+// Then('I should see required field errors', async ({ loginPage }) => {
+//   const isRequiredErrorDisplayed = await loginPage.isRequiredFieldErrorDisplayed();
+//   expect(isRequiredErrorDisplayed).toBe(true);
+// });

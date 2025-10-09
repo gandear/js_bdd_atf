@@ -3,12 +3,12 @@ import { test } from "../../../../../src/fixtures/index.js";
 
 test.describe('Login with Valid Credentials', () => {
 
-  test.beforeEach('Background', async ({ Given, log, loginPage }, testInfo) => { if (testInfo.error) return;
-    await Given('I am on the OrangeHRM login page', null, { log, loginPage }); 
+  test.beforeEach('Background', async ({ Given, logger, loginPage }, testInfo) => { if (testInfo.error) return;
+    await Given('I am on the OrangeHRM login page', null, { logger, loginPage }); 
   });
   
-  test('Login with valid credentials', { tag: ['@ui', '@login', '@positive'] }, async ({ When, Then, dashboardPage, log, loginPage }) => { 
-    await When('I log in with username "Admin" and password "admin123"', null, { log, loginPage }); 
+  test('Login with valid credentials', { tag: ['@ui', '@login', '@positive'] }, async ({ When, Then, dashboardPage, logger, loginPage }) => { 
+    await When('I log in with username "Admin" and password "admin123"', null, { logger, loginPage }); 
     await Then('I should see the dashboard', null, { dashboardPage }); 
   });
 

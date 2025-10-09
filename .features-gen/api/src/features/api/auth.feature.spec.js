@@ -5,56 +5,56 @@ test.describe('Auth API', () => {
 
   test.describe('Register with valid creds', () => {
 
-    test('Example #1', { tag: ['@api', '@auth', '@positive', '@register'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I register with email "eve.holt@reqres.in" and password "pistol"', null, { apiClient, log, testState }); 
-      await Then('registration succeeds', null, { log, testState }); 
+    test('Example #1', { tag: ['@api', '@auth', '@positive', '@register'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I register with email "eve.holt@reqres.in" and password "pistol"', null, { apiClient, logger, testState }); 
+      await Then('registration succeeds', null, { logger, testState }); 
     });
 
   });
 
   test.describe('Register with invalid creds', () => {
 
-    test('Example #1', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I register with email "sydney@fife" and password ""', null, { apiClient, log, testState }); 
-      await Then('registration fails with an error', null, { log, testState }); 
+    test('Example #1', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I register with email "sydney@fife" and password ""', null, { apiClient, logger, testState }); 
+      await Then('registration fails with an error', null, { logger, testState }); 
     });
 
-    test('Example #2', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I register with email "invalid-email" and password "pass"', null, { apiClient, log, testState }); 
-      await Then('registration fails with an error', null, { log, testState }); 
+    test('Example #2', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I register with email "invalid-email" and password "pass"', null, { apiClient, logger, testState }); 
+      await Then('registration fails with an error', null, { logger, testState }); 
     });
 
-    test('Example #3', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I register with email "" and password "pass"', null, { apiClient, log, testState }); 
-      await Then('registration fails with an error', null, { log, testState }); 
+    test('Example #3', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I register with email "" and password "pass"', null, { apiClient, logger, testState }); 
+      await Then('registration fails with an error', null, { logger, testState }); 
     });
 
   });
 
   test.describe('Login with valid creds', () => {
 
-    test('Example #1', { tag: ['@api', '@auth', '@positive', '@login'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I login with email "eve.holt@reqres.in" and password "cityslicka"', null, { apiClient, log, testState }); 
-      await Then('login succeeds', null, { log, testState }); 
+    test('Example #1', { tag: ['@api', '@auth', '@positive', '@login'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I login with email "eve.holt@reqres.in" and password "cityslicka"', null, { apiClient, logger, testState }); 
+      await Then('login succeeds', null, { logger, testState }); 
     });
 
   });
 
   test.describe('Login with invalid creds', () => {
 
-    test('Example #1', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I login with email "" and password "pass"', null, { apiClient, log, testState }); 
-      await Then('login fails with an error', null, { log, testState }); 
+    test('Example #1', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I login with email "" and password "pass"', null, { apiClient, logger, testState }); 
+      await Then('login fails with an error', null, { logger, testState }); 
     });
 
-    test('Example #2', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I login with email "user@test.com" and password ""', null, { apiClient, log, testState }); 
-      await Then('login fails with an error', null, { log, testState }); 
+    test('Example #2', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I login with email "user@test.com" and password ""', null, { apiClient, logger, testState }); 
+      await Then('login fails with an error', null, { logger, testState }); 
     });
 
-    test('Example #3', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I login with email "bad@" and password "secret"', null, { apiClient, log, testState }); 
-      await Then('login fails with an error', null, { log, testState }); 
+    test('Example #3', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I login with email "bad@" and password "secret"', null, { apiClient, logger, testState }); 
+      await Then('login fails with an error', null, { logger, testState }); 
     });
 
   });

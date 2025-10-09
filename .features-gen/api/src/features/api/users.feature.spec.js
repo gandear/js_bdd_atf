@@ -5,115 +5,115 @@ test.describe('Users API', () => {
 
   test.describe('List users for page <page>', () => {
 
-    test('List users for page 1', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch users page 1', null, { apiClient, log, testState }); 
-      await Then('a users list is returned', null, { log, testState }); 
+    test('List users for page 1', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch users page 1', null, { apiClient, logger, testState }); 
+      await Then('a users list is returned', null, { logger, testState }); 
     });
 
-    test('List users for page 2', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch users page 2', null, { apiClient, log, testState }); 
-      await Then('a users list is returned', null, { log, testState }); 
+    test('List users for page 2', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch users page 2', null, { apiClient, logger, testState }); 
+      await Then('a users list is returned', null, { logger, testState }); 
     });
 
   });
 
   test.describe('Get existing user by id <id>', () => {
 
-    test('Get existing user by id 1', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "1"', null, { apiClient, log, testState }); 
-      await Then('a single user is returned', null, { log, testState }); 
+    test('Get existing user by id 1', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "1"', null, { apiClient, logger, testState }); 
+      await Then('a single user is returned', null, { logger, testState }); 
     });
 
-    test('Get existing user by id 2', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "2"', null, { apiClient, log, testState }); 
-      await Then('a single user is returned', null, { log, testState }); 
+    test('Get existing user by id 2', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "2"', null, { apiClient, logger, testState }); 
+      await Then('a single user is returned', null, { logger, testState }); 
     });
 
-    test('Get existing user by id 3', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "3"', null, { apiClient, log, testState }); 
-      await Then('a single user is returned', null, { log, testState }); 
+    test('Get existing user by id 3', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "3"', null, { apiClient, logger, testState }); 
+      await Then('a single user is returned', null, { logger, testState }); 
     });
 
-    test('Get existing user by id 4', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "4"', null, { apiClient, log, testState }); 
-      await Then('a single user is returned', null, { log, testState }); 
+    test('Get existing user by id 4', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "4"', null, { apiClient, logger, testState }); 
+      await Then('a single user is returned', null, { logger, testState }); 
     });
 
-    test('Get existing user by id 5', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "5"', null, { apiClient, log, testState }); 
-      await Then('a single user is returned', null, { log, testState }); 
+    test('Get existing user by id 5', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "5"', null, { apiClient, logger, testState }); 
+      await Then('a single user is returned', null, { logger, testState }); 
     });
 
-    test('Get existing user by id 6', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "6"', null, { apiClient, log, testState }); 
-      await Then('a single user is returned', null, { log, testState }); 
+    test('Get existing user by id 6', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "6"', null, { apiClient, logger, testState }); 
+      await Then('a single user is returned', null, { logger, testState }); 
     });
 
   });
 
   test.describe('Get non-existing user by id <id>', () => {
 
-    test('Get non-existing user by id 23', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "23"', null, { apiClient, log, testState }); 
-      await Then('the user is not found', null, { log, testState }); 
+    test('Get non-existing user by id 23', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "23"', null, { apiClient, logger, testState }); 
+      await Then('the user is not found', null, { logger, testState }); 
     });
 
-    test('Get non-existing user by id 999', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "999"', null, { apiClient, log, testState }); 
-      await Then('the user is not found', null, { log, testState }); 
+    test('Get non-existing user by id 999', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "999"', null, { apiClient, logger, testState }); 
+      await Then('the user is not found', null, { logger, testState }); 
     });
 
-    test('Get non-existing user by id 0', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "0"', null, { apiClient, log, testState }); 
-      await Then('the user is not found', null, { log, testState }); 
+    test('Get non-existing user by id 0', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "0"', null, { apiClient, logger, testState }); 
+      await Then('the user is not found', null, { logger, testState }); 
     });
 
-    test('Get non-existing user by id -1', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I fetch user with id "-1"', null, { apiClient, log, testState }); 
-      await Then('the user is not found', null, { log, testState }); 
+    test('Get non-existing user by id -1', { tag: ['@api', '@users', '@read'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I fetch user with id "-1"', null, { apiClient, logger, testState }); 
+      await Then('the user is not found', null, { logger, testState }); 
     });
 
   });
 
-  test('Create a random user', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, log, testDataManager, testState }) => { 
-    await When('I create a random user', null, { log, testDataManager, testState }); 
-    await Then('the user is created', null, { log, testState }); 
+  test('Create a random user', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, logger, testDataManager, testState }) => { 
+    await When('I create a random user', null, { logger, testDataManager, testState }); 
+    await Then('the user is created', null, { logger, testState }); 
   });
 
   test.describe('Update user <id> with a new job', () => {
 
-    test('Update user 1 with a new job', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I update user "1" with a new job', null, { apiClient, log, testState }); 
-      await Then('the user is updated', null, { log, testState }); 
+    test('Update user 1 with a new job', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I update user "1" with a new job', null, { apiClient, logger, testState }); 
+      await Then('the user is updated', null, { logger, testState }); 
     });
 
-    test('Update user 2 with a new job', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I update user "2" with a new job', null, { apiClient, log, testState }); 
-      await Then('the user is updated', null, { log, testState }); 
+    test('Update user 2 with a new job', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I update user "2" with a new job', null, { apiClient, logger, testState }); 
+      await Then('the user is updated', null, { logger, testState }); 
     });
 
-    test('Update user 3 with a new job', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I update user "3" with a new job', null, { apiClient, log, testState }); 
-      await Then('the user is updated', null, { log, testState }); 
+    test('Update user 3 with a new job', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I update user "3" with a new job', null, { apiClient, logger, testState }); 
+      await Then('the user is updated', null, { logger, testState }); 
     });
 
   });
 
   test.describe('Delete user <id>', () => {
 
-    test('Delete user 1', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I delete user "1"', null, { apiClient, log, testState }); 
-      await Then('the user is deleted', null, { log, testState }); 
+    test('Delete user 1', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I delete user "1"', null, { apiClient, logger, testState }); 
+      await Then('the user is deleted', null, { logger, testState }); 
     });
 
-    test('Delete user 2', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I delete user "2"', null, { apiClient, log, testState }); 
-      await Then('the user is deleted', null, { log, testState }); 
+    test('Delete user 2', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I delete user "2"', null, { apiClient, logger, testState }); 
+      await Then('the user is deleted', null, { logger, testState }); 
     });
 
-    test('Delete user 3', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, log, testState }) => { 
-      await When('I delete user "3"', null, { apiClient, log, testState }); 
-      await Then('the user is deleted', null, { log, testState }); 
+    test('Delete user 3', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+      await When('I delete user "3"', null, { apiClient, logger, testState }); 
+      await Then('the user is deleted', null, { logger, testState }); 
     });
 
   });

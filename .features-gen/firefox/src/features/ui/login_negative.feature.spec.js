@@ -3,35 +3,35 @@ import { test } from "../../../../../src/fixtures/index.js";
 
 test.describe('Login with Invalid or Missing Credentials', () => {
 
-  test.beforeEach('Background', async ({ Given, log, loginPage }, testInfo) => { if (testInfo.error) return;
-    await Given('I am on the OrangeHRM login page', null, { log, loginPage }); 
+  test.beforeEach('Background', async ({ Given, logger, loginPage }, testInfo) => { if (testInfo.error) return;
+    await Given('I am on the OrangeHRM login page', null, { logger, loginPage }); 
   });
   
   test.describe('Login attempt with invalid or missing credentials', () => {
 
-    test('Example #1', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, log, loginPage }) => { 
-      await When('I log in with username "Admin" and password "123"', null, { log, loginPage }); 
-      await Then('I should see the error message "Invalid credentials"', null, { log, loginPage }); 
+    test('Example #1', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, logger, loginPage }) => { 
+      await When('I log in with username "Admin" and password "123"', null, { logger, loginPage }); 
+      await Then('I should see the error message "Invalid credentials"', null, { logger, loginPage }); 
     });
 
-    test('Example #2', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, log, loginPage }) => { 
-      await When('I log in with username "invalid" and password "admin123"', null, { log, loginPage }); 
-      await Then('I should see the error message "Invalid credentials"', null, { log, loginPage }); 
+    test('Example #2', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, logger, loginPage }) => { 
+      await When('I log in with username "invalid" and password "admin123"', null, { logger, loginPage }); 
+      await Then('I should see the error message "Invalid credentials"', null, { logger, loginPage }); 
     });
 
-    test('Example #3', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, log, loginPage }) => { 
-      await When('I log in with username "" and password "admin123"', null, { log, loginPage }); 
-      await Then('I should see the error message "Required"', null, { log, loginPage }); 
+    test('Example #3', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, logger, loginPage }) => { 
+      await When('I log in with username "" and password "admin123"', null, { logger, loginPage }); 
+      await Then('I should see the error message "Required"', null, { logger, loginPage }); 
     });
 
-    test('Example #4', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, log, loginPage }) => { 
-      await When('I log in with username "Admin" and password ""', null, { log, loginPage }); 
-      await Then('I should see the error message "Required"', null, { log, loginPage }); 
+    test('Example #4', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, logger, loginPage }) => { 
+      await When('I log in with username "Admin" and password ""', null, { logger, loginPage }); 
+      await Then('I should see the error message "Required"', null, { logger, loginPage }); 
     });
 
-    test('Example #5', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, log, loginPage }) => { 
-      await When('I log in with username "" and password ""', null, { log, loginPage }); 
-      await Then('I should see the error message "Required"', null, { log, loginPage }); 
+    test('Example #5', { tag: ['@ui', '@login', '@negative'] }, async ({ When, Then, logger, loginPage }) => { 
+      await When('I log in with username "" and password ""', null, { logger, loginPage }); 
+      await Then('I should see the error message "Required"', null, { logger, loginPage }); 
     });
 
   });
