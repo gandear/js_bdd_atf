@@ -12,7 +12,7 @@ export class ApiClient {
     return { res, json };
   }
 
-  _opts({ data, headers } = {}) {
+  opts({ data, headers } = {}) {
     return {
       data,
       headers: this.authToken
@@ -21,17 +21,18 @@ export class ApiClient {
       failOnStatusCode: false
     };
   }
-  async _handle(p) {
+  
+  async  handle(p) {
     const res = await p;
     const ct = res.headers()['content-type'] ?? '';
     const json = ct.includes('application/json') ? await res.json() : null;
     return { res, json };
   }
 
-  get(path, headers)         { return this._handle(this.request.get(path, this._opts({ headers }))); }
-  post(path, data, headers)  { return this._handle(this.request.post(path, this._opts({ data, headers }))); }
-  put(path, data, headers)   { return this._handle(this.request.put(path, this._opts({ data, headers }))); }
-  delete(path, headers)      { return this._handle(this.request.delete(path, this._opts({ headers }))); }
+  get(path, headers)         { return this.handle(this.request.get(path, this.opts({ headers }))); }
+  post(path, data, headers)  { return this.handle(this.request.post(path, this.opts({ data, headers }))); }
+  put(path, data, headers)   { return this.handle(this.request.put(path, this.opts({ data, headers }))); }
+  delete(path, headers)      { return this.handle(this.request.delete(path, this.opts({ headers }))); }
 
   // Endpoints
   getUsers(page=1)   { return this.get(`/api/users?page=${page}`); }
