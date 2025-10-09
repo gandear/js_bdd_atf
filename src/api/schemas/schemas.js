@@ -5,18 +5,41 @@
 // ============================================================================
 
 /**
- * Base user/product schema
- * Note: ReqRes.in now returns products (colors) instead of actual users
+ * Base user schema 
  */
 export const userSchema = {
   type: 'object',
-  required: ['id', 'name', 'year', 'color', 'pantone_value'],
+  required: ['id', 'email', 'first_name', 'last_name', 'avatar'],
   properties: {
     id: { type: 'integer' },
-    name: { type: 'string' },
-    year: { type: 'integer' },
-    color: { type: 'string' },
-    pantone_value: { type: 'string' }
+    email: { type: 'string', format: 'email' },
+    first_name: { type: 'string' },
+    last_name: { type: 'string' },
+    avatar: { type: 'string', format: 'uri' },
+  },
+  additionalProperties: true
+};
+
+/**
+ * Support object schema
+ */
+export const supportSchema = {
+  type: 'object',
+  required: ['url', 'text'],
+  properties: {
+    url: { type: 'string', format: 'uri' },
+    text: { type: 'string', minLength: 1 }
+  },
+  additionalProperties: true
+};
+
+export const metaSchema = {
+  type: 'object',
+  required: ['powered_by', 'upgrade_url', 'docs_url'],
+  properties: {
+    powered_by: { type: 'string', minLength: 1 },
+    upgrade_url: { type: 'string', format: 'uri' },
+    docs_url: { type: 'string', format: 'uri' },
   },
   additionalProperties: true
 };
@@ -27,30 +50,34 @@ export const userSchema = {
 
 /**
  * GET /api/users?page={page}
- * Returns paginated list of users
+ * Returns paginated list of users, incluzând support și meta.
  */
 export const usersResponseSchema = {
   type: 'object',
-  required: ['page', 'per_page', 'total', 'total_pages', 'data'],
+  required: ['page', 'per_page', 'total', 'total_pages', 'data', 'support', '_meta'],
   properties: {
     page: { type: 'integer' },
     per_page: { type: 'integer' },
     total: { type: 'integer' },
     total_pages: { type: 'integer' },
-    data: { type: 'array', items: userSchema }
+    data: { type: 'array', items: userSchema },
+    support: supportSchema, 
+    _meta: metaSchema 
   },
   additionalProperties: true
 };
 
 /**
  * GET /api/users/{id}
- * Returns single user details
+ * Returns single user details, incluzând support și meta.
  */
 export const singleUserResponseSchema = {
   type: 'object',
-  required: ['data'],
+  required: ['data', 'support', '_meta'],
   properties: { 
-    data: userSchema 
+    data: userSchema,
+    support: supportSchema, 
+    _meta: metaSchema 
   },
   additionalProperties: true
 };
@@ -69,8 +96,8 @@ export const createdUserSchema = {
   properties: {
     name: { type: 'string', minLength: 1 },
     job: { type: 'string', minLength: 1 },
-    id: { type: 'string' },
-    createdAt: { type: 'string' }
+    id: { type: 'string', minLength: 1 },
+    createdAt: { type: 'string', format: 'date-time' }
   },
   additionalProperties: true
 };
@@ -85,7 +112,7 @@ export const updatedUserSchema = {
   properties: {
     name: { type: 'string', minLength: 1 },
     job: { type: 'string', minLength: 1 },
-    updatedAt: { type: 'string' }
+    updatedAt: { type: 'string', format: 'date-time' }
   },
   additionalProperties: true
 };
