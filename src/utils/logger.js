@@ -15,9 +15,13 @@ export function createLogger(ctx = {}) {
   const { RUN_DATE, RUN_TIME } = getRunStamp();
 
   const project  = sanitizeSegment(ctx.project || 'project');
+  const browser  = ctx.browser ? sanitizeSegment(ctx.browser) : null;
   const testName = sanitizeSegment(ctx.testName || 'test');
 
-  const destDir = join(process.cwd(), 'logs', RUN_DATE, RUN_TIME, project);
+  // Group logs by project and optionally by browser (chromium/firefox/webkit)
+  const destDir = browser
+    ? join(process.cwd(), 'logs', RUN_DATE, RUN_TIME, browser, project)
+    : join(process.cwd(), 'logs', RUN_DATE, RUN_TIME, project);
   ensureDir(destDir);
 
   const filePath = join(destDir, `${testName}.log`);
