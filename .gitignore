@@ -5,8 +5,7 @@ node_modules/
 # Playwright / test artifacts
 allure-results/
 test-results/
-playwright-report/
-reports/
+
 # Local logs / archives
 logs/
 # IDE / editor
@@ -20,6 +19,8 @@ logs/
 BACKUP/
 
 # reports
+playwright-report/
+reports/
 allure-report/
 html-report/
 junit-results/

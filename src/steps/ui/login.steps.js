@@ -41,8 +41,3 @@ Then('I should see the error message {string}', async ({ loginPage, logger }, ex
     expect(banner).toContain(expected);
   }
 });
-
-// Then('I should see required field errors', async ({ loginPage }) => {
-//   const isRequiredErrorDisplayed = await loginPage.isRequiredFieldErrorDisplayed();
-//   expect(isRequiredErrorDisplayed).toBe(true);
-// });`

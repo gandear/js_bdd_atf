@@ -9,7 +9,6 @@ const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
 // Separare clară între feature-uri API și UI
 const ui_features = ['src/features/ui/**/*.feature'];
 const api_features = ['src/features/api/**/*.feature'];
-const api_edge_cases = ['src/features/api/edge-cases.feature'];
 
 // UI baseURL 
 const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com/';
