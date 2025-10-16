@@ -22,5 +22,5 @@ BACKUP/
 # reports
 allure-report/
 html-report/
-junit/
+junit-results/
 junit/results.xml

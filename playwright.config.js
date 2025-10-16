@@ -9,6 +9,7 @@ const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
 // Separare clară între feature-uri API și UI
 const ui_features = ['src/features/ui/**/*.feature'];
 const api_features = ['src/features/api/**/*.feature'];
+const api_edge_cases = ['src/features/api/edge-cases.feature'];
 
 // UI baseURL 
 const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.com/';
@@ -47,9 +48,8 @@ const uiUse = {
 };
 
 export default defineConfig({
-  // stabilitate în CI
   forbidOnly: isCI,
-  retries: isCI ? 2 : 0,
+  retries: isCI ? 1 : 0,
   workers: isCI ? 4 : undefined,
 
   timeout: 30_000,
@@ -92,7 +92,7 @@ export default defineConfig({
         video: 'off'
       }
     },
-
+    
     // === UI – Chromium / Firefox / WebKit - doar testele UI ===
     {
       ...defineBddProject({

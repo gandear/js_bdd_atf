@@ -40,6 +40,9 @@ test.describe('Login with Invalid or Missing Credentials', () => {
 
 // == technical section ==
 
+test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, logger }) => $runScenarioHooks('before', { logger }));
+test.afterEach('AfterEach Hooks', ({ $runScenarioHooks, logger, page }) => $runScenarioHooks('after', { logger, page }));
+
 test.use({
   $test: [({}, use) => use(test), { scope: 'test', box: true }],
   $uri: [({}, use) => use('src\\features\\ui\\login_negative.feature'), { scope: 'test', box: true }],
