@@ -1,46 +1,126 @@
 // src/api/clients/ApiClient.js
+// API client pentru Playwright APIRequestContext:
+// - timeouts per-request (fără Promise.race)
+// - erori tipizate (TimeoutError / NetworkError / ParseError / ApiError)
+// - parsare JSON sigură pe baza Content-Type
+// - Authorization Bearer auto dacă a fost setat token-ul
+// - endpoints convenabile pentru ReqRes
+
+import { ApiError, TimeoutError, NetworkError, ParseError } from './errors.js';
+
 export class ApiClient {
-  constructor(request) {
+
+  constructor(request, { defaultHeaders = {}, defaultTimeoutMs = 10_000 } = {}) {
     this.request = request;
-    this.authToken = null; // for endpoints requiring auth
+    this.authToken = null;
+    this.defaultHeaders = defaultHeaders;
+    this.defaultTimeoutMs = defaultTimeoutMs;
   }
 
-  setAuthToken(token) { this.authToken = token; }
+  setAuthToken(token) {
+    this.authToken = token;
+  }
 
-  async loginAndSetToken(creds) {
-    const { res, json } = await this.login(creds); // POST /api/login
+  async loginAndSetToken(credentials) {
+    const { res, json } = await this.login(credentials); // POST /api/login
     if (res.status() === 200 && json?.token) this.setAuthToken(json.token);
     return { res, json };
   }
 
-  getRequestOptions({ data, headers } = {}) {
-    return {
-      data,
-      headers: this.authToken
-        ? { Authorization: `Bearer ${this.authToken}`, ...(headers ?? {}) }
-        : headers,
-      failOnStatusCode: false
+  mergeHeaders(headers) {
+    const merged = {
+      Accept: 'application/json, text/plain;q=0.9',
+      ...this.defaultHeaders,
+      ...(headers || {}),
     };
-  }
-  
-  async  processResponse(promise) {
-    const res = await promise;
-    const contentType = res.headers()['content-type'] ?? '';
-    const json = contentType.includes('application/json') ? await res.json() : null;
-    return { res, json };
+    if (this.authToken && !('Authorization' in merged)) {
+      merged.Authorization = `Bearer ${this.authToken}`;
+    }
+    return merged;
   }
 
-  get(path, headers)         { return this.processResponse(this.request.get(path, this.getRequestOptions({ headers }))); }
-  post(path, data, headers)  { return this.processResponse(this.request.post(path, this.getRequestOptions({ data, headers }))); }
-  put(path, data, headers)   { return this.processResponse(this.request.put(path, this.getRequestOptions({ data, headers }))); }
-  delete(path, headers)      { return this.processResponse(this.request.delete(path, this.getRequestOptions({ headers }))); }
+  buildUrlWithQuery(basePath, query) {
+    if (!query || typeof query !== 'object') return basePath;
+    const url = new URL(basePath, 'http://_dummy_base_'); // bază neutră ca să folosim URLSearchParams
+    for (const [k, v] of Object.entries(query)) {
+      if (Array.isArray(v)) v.forEach(item => url.searchParams.append(k, String(item)));
+      else if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
+    }
+    const qs = url.search.length ? url.search : '';
+    return `${basePath.split('?')[0]}${qs}`;
+  }
 
-  // Endpoints
-  getUsers(page=1)   { return this.get(`/api/users?page=${page}`); }
-  getUser(id)        { return this.get(`/api/users/${id}`); }
-  createUser(user)   { return this.post(`/api/users`, user, { 'Content-Type': 'application/json' }); }
-  updateUser(id,u)   { return this.put(`/api/users/${id}`, u, { 'Content-Type': 'application/json' }); }
-  deleteUser(id)     { return this.delete(`/api/users/${id}`); }
-  register(creds)    { return this.post(`/api/register`, creds, { 'Content-Type': 'application/json' }); }
-  login(creds)       { return this.post(`/api/login`, creds, { 'Content-Type': 'application/json' }); }
+  async requestWithHandling(method, path, options = {}) {
+    const { data, headers, timeoutMs, query, throwOnHttpError = true, validateStatus } = options;
+
+    // Playwright suportă `params`, dar pentru compatibilitate construim și noi URL-ul cu query
+    const finalPath = this.buildUrlWithQuery(path, query);
+
+    const requestOptions = {
+      headers: this.mergeHeaders(headers),
+      timeout: timeoutMs ?? this.defaultTimeoutMs,
+    };
+
+    // Dacă trimiți body și nu ai specificat un content-type, presupunem JSON
+    if (data !== undefined) {
+      const lower = Object.fromEntries(
+        Object.entries(requestOptions.headers).map(([k, v]) => [k.toLowerCase(), v])
+      );
+      if (!lower['content-type']) requestOptions.headers['Content-Type'] = 'application/json';
+      requestOptions.data = data;
+    }
+
+    let res;
+    try {
+      res = await this.request[method](finalPath, requestOptions);
+    } catch (e) {
+      const msg = String(e?.message || '').toLowerCase();
+      if (msg.includes('timeout')) throw new TimeoutError(requestOptions.timeout, { url: finalPath, cause: e });
+      if (msg.includes('net') || msg.includes('network')) throw new NetworkError('Network request failed', { url: finalPath, cause: e });
+      throw new ApiError('Request failed', { url: finalPath, cause: e });
+    }
+
+    const contentType = (res.headers()['content-type'] || '').toLowerCase();
+    let json = null;
+    let text = null;
+
+    if (contentType.includes('application/json')) {
+      try {
+        json = await res.json();
+      } catch (e) {
+        throw new ParseError(e.message, { status: res.status(), url: res.url() });
+      }
+    } else {
+      try { text = await res.text(); } catch { /* ignore */ }
+    }
+
+    const status = res.status();
+    const okByPolicy = validateStatus ? validateStatus(status) : res.ok();
+
+    if (!okByPolicy && throwOnHttpError) {
+      throw new ApiError(`HTTP ${status}`, {
+        status,
+        url: res.url(),
+        body: json ?? text
+      });
+    }
+
+    return { res, json, text };
+  }
+
+  // Verbe convenabile (nume clare, fără underscore)
+  get(path, headers, opts)        { return this.requestWithHandling('get', path, { headers, ...(opts || {}) }); }
+  post(path, data, headers, opts) { return this.requestWithHandling('post', path, { data, headers, ...(opts || {}) }); }
+  put(path, data, headers, opts)  { return this.requestWithHandling('put', path, { data, headers, ...(opts || {}) }); }
+  delete(path, headers, opts)     { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
+  patch(path, data, headers, opts){ return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
+
+  // === Endpoints ReqRes ===
+  getUsers(page = 1, opts)          { return this.get(`/api/users`, undefined, { ...(opts || {}), query: { page } }); }
+  getUser(id, opts)                 { return this.get(`/api/users/${id}`, undefined, opts); }
+  createUser(user, opts)            { return this.post(`/api/users`, user, { 'Content-Type': 'application/json' }, opts); }
+  updateUser(id, user, opts)        { return this.put(`/api/users/${id}`, user, { 'Content-Type': 'application/json' }, opts); }
+  deleteUser(id, opts)              { return this.delete(`/api/users/${id}`, undefined, opts); }
+  register(credentials, opts)       { return this.post(`/api/register`, credentials, { 'Content-Type': 'application/json' }, opts); }
+  login(credentials, opts)          { return this.post(`/api/login`, credentials, { 'Content-Type': 'application/json' }, opts); }
 }

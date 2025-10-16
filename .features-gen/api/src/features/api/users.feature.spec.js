@@ -75,8 +75,8 @@ test.describe('Users API', () => {
 
   });
 
-  test('Create a random user', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, logger, testDataManager, testState }) => { 
-    await When('I create a random user', null, { logger, testDataManager, testState }); 
+  test('Create a random user', { tag: ['@api', '@users', '@write'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+    await When('I create a random user', null, { apiClient, logger, testState }); 
     await Then('the user is created', null, { logger, testState }); 
   });
 

@@ -83,6 +83,7 @@ export default defineConfig({
         outputDir: '.features-gen/api'
       }),
       metadata: { suite: 'API' },
+      retries: 0,
       use: {
         baseURL: apiBaseURL,
         extraHTTPHeaders: apiHeaders,
