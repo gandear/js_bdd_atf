@@ -1,7 +1,7 @@
 // src/config/environment.js
 export const environments = {
   dev: {
-    API_BASE_URL: 'https://reqres.in/api',
+    API_BASE_URL: 'https://reqres.in/',
     API_TOKEN: 'reqres-free-v1',
     TIMEOUT: 5000,
     RETRY_COUNT: 1,
@@ -9,7 +9,7 @@ export const environments = {
   },
   
   staging: {
-    API_BASE_URL: 'https://staging-reqres.in/api',
+    API_BASE_URL: 'https://staging-reqres.in/',
     API_TOKEN: 'staging-token',
     TIMEOUT: 10000,
     RETRY_COUNT: 2,
@@ -17,7 +17,7 @@ export const environments = {
   },
   
   prod: {
-    API_BASE_URL: 'https://api.reqres.in/api',
+    API_BASE_URL: 'https://api.reqres.in/',
     API_TOKEN: 'prod-token',
     TIMEOUT: 15000,
     RETRY_COUNT: 3,
