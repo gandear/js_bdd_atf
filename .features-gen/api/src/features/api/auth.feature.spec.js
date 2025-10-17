@@ -59,17 +59,17 @@ test.describe('Auth API', () => {
 
   });
 
-  test('Authenticate and keep token in client', { tag: ['@api', '@auth', '@session'] }, async ({ When, Then, apiClient, testState }) => { 
-    await When('I authenticate with valid credentials', null, { apiClient, testState }); 
-    await Then('the client holds a bearer token', null, { apiClient, testState }); 
+  test('Authenticate and keep token in client', { tag: ['@api', '@auth', '@session'] }, async ({ When, Then, apiClient, logger, testState }) => { 
+    await When('I authenticate with valid credentials', null, { apiClient, logger, testState }); 
+    await Then('the client holds a bearer token', null, { apiClient, logger, testState }); 
   });
 
 });
 
 // == technical section ==
 
-test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, logger }) => $runScenarioHooks('before', { logger }));
-test.afterEach('AfterEach Hooks', ({ $runScenarioHooks, logger, page }) => $runScenarioHooks('after', { logger, page }));
+test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, logger, testInfo }) => $runScenarioHooks('before', { logger, testInfo }));
+test.afterEach('AfterEach Hooks', ({ $runScenarioHooks, logger, page, testInfo }) => $runScenarioHooks('after', { logger, page, testInfo }));
 
 test.use({
   $test: [({}, use) => use(test), { scope: 'test', box: true }],
