@@ -1,7 +1,5 @@
 @api @users
 Feature: User Management (API)
-  This feature covers the CRUD (Create, Read, Update, Delete)
-  operations for the /users resource.
 
   Background:
     Given the API is available and running
@@ -57,7 +55,7 @@ Feature: User Management (API)
     And the response contains a creation timestamp
 
   @write @create @positive @bulk
-  Scenario: Create multiple users (from create_users.feature file)
+  Scenario: Create multiple users
     When I send a create request for the following users:
       | name     | job    |
       | Alice QA | Tester |
@@ -68,7 +66,7 @@ Feature: User Management (API)
 
   @write @create @negative
   Scenario Outline: Creating a user with missing data (provider behavior)
-    # ReqRes creează chiar și cu câmpuri goale → 201
+    # ReqRes răspunde 201 chiar și cu câmpuri goale
     When I send the create user request with name "<name>" and job "<job>"
     Then the HTTP response is 201
     And the response contains a newly generated user ID
@@ -80,29 +78,22 @@ Feature: User Management (API)
       |          | Leader |
       |          |        |
 
-
   # ---- UPDATE ----
   @write @update @positive
-  Scenario Outline: Fully update an existing user (PUT)
-    Given I want to update user "<id>" with name "Neo" and job "The One"
-    When I send a PUT request for user "<id>"
+  Scenario: Fully update an existing user (PUT)
+    Given I want to update user "2" with name "Neo" and job "The One"
+    When I send a PUT request for user "2"
     Then the HTTP response is 200
     And the response contains the updated name "Neo" and job "The One"
     And the response contains an update timestamp
-    Examples:
-      | id |
-      | 2  |
 
   @write @update @positive
-  Scenario Outline: Partially update an existing user (PATCH)
-    Given I want to update user "<id>" with only the job "Zion Resident"
-    When I send a PATCH request for user "<id>"
+  Scenario: Partially update an existing user (PATCH)
+    Given I want to update user "3" with only the job "Zion Resident"
+    When I send a PATCH request for user "3"
     Then the HTTP response is 200
     And the response contains the updated job "Zion Resident"
     And the response contains an update timestamp
-    Examples:
-      | id |
-      | 3  |
 
   @write @update @negative
   Scenario: Attempting to update a non-existent user (provider behavior)
@@ -126,3 +117,4 @@ Feature: User Management (API)
   Scenario: Attempting to delete a non-existent user (provider behavior)
     When I send a delete request for user "999"
     Then the HTTP response is 204
+    And the response has no content

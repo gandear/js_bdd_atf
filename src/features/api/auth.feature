@@ -7,14 +7,14 @@ Feature: User Authentication
     And no previous auth token is set
 
   # --- REGISTER ---
-  @positive @register
+  @register @positive
   Scenario: Register a new user with valid credentials
     When I register a user with email "eve.holt@reqres.in" and password "pistol"
     Then the HTTP response is 200
     And the response contains a user ID
     And the response contains an authentication token
 
-  @negative @register
+  @register @negative
   Scenario Outline: Registration fails when data is invalid or missing
     When I register a user with email "<email>" and password "<password>"
     Then the HTTP response is 400
@@ -26,16 +26,13 @@ Feature: User Authentication
       | invalid-email | pass     | Note: Only defined users succeed registration |
 
   # --- LOGIN ---
-  @positive @login
-  Scenario Outline: Login succeeds with valid credentials
-    When I log in with email "<email>" and password "<password>"
+  @login @positive
+  Scenario: Login succeeds with valid credentials
+    When I log in with email "eve.holt@reqres.in" and password "cityslicka"
     Then the HTTP response is 200
     And the response contains an authentication token
-    Examples:
-      | email              | password   |
-      | eve.holt@reqres.in | cityslicka |
 
-  @negative @login
+  @login @negative
   Scenario Outline: Login fails with invalid or missing credentials
     When I log in with email "<email>" and password "<password>"
     Then the HTTP response is 400
