@@ -1,46 +1,47 @@
 @api @auth
-Feature: Auth API
+Feature: User Authentication
+
+  Background:
+    Given the authentication endpoint is configured
+    And the API client is ready
+    And no previous auth token is set
 
   # --- REGISTER ---
   @positive @register
-  Scenario Outline: Register with valid creds
-    When I register with email "<email>" and password "<password>"
-    Then registration succeeds
-  Examples:
-    | email              | password |
-    | eve.holt@reqres.in | pistol   |
+  Scenario: Register a new user with valid credentials
+    When I register a user with email "eve.holt@reqres.in" and password "pistol"
+    Then the HTTP response is 200
+    And the response contains a user ID
+    And the response contains an authentication token
 
   @negative @register
-  Scenario Outline: Register with invalid creds
-    When I register with email "<email>" and password "<password>"
-    Then registration fails with an error
-  Examples:
-    | email         | password |
-    | sydney@fife   |          |
-    | invalid-email | pass     |
-    |               | pass     |
+  Scenario Outline: Registration fails when data is invalid or missing
+    When I register a user with email "<email>" and password "<password>"
+    Then the HTTP response is 400
+    And the response contains the error message "<expectedError>"
+    Examples:
+      | email         | password | expectedError                              |
+      | sydney@fife   |          | Missing password                           |
+      |               | pass     | Missing email                              |
+      | invalid-email | pass     | Note: Only defined users succeed registration |
 
   # --- LOGIN ---
   @positive @login
-  Scenario Outline: Login with valid creds
-    When I login with email "<email>" and password "<password>"
-    Then login succeeds
-  Examples:
-    | email              | password   |
-    | eve.holt@reqres.in | cityslicka |
+  Scenario Outline: Login succeeds with valid credentials
+    When I log in with email "<email>" and password "<password>"
+    Then the HTTP response is 200
+    And the response contains an authentication token
+    Examples:
+      | email              | password   |
+      | eve.holt@reqres.in | cityslicka |
 
   @negative @login
-  Scenario Outline: Login with invalid creds
-    When I login with email "<email>" and password "<password>"
-    Then login fails with an error
-  Examples:
-    | email         | password |
-    |               | pass     |
-    | user@test.com |          |
-    | bad@          | secret   |
-
-  # --- SESSION TOKEN (helper) ---
-  @session
-  Scenario: Authenticate and keep token in client
-    When I authenticate with valid credentials
-    Then the client holds a bearer token
+  Scenario Outline: Login fails with invalid or missing credentials
+    When I log in with email "<email>" and password "<password>"
+    Then the HTTP response is 400
+    And the response contains the error message "<expectedError>"
+    Examples:
+      | email                  | password | expectedError    |
+      |                        | pass     | Missing email    |
+      | peter.klaven@reqres.in |          | Missing password |
+      | bad@email.com          | secret   | user not found   |

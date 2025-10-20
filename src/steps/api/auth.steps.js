@@ -1,88 +1,56 @@
-// src/steps/api/auth.steps.js
 import { createBdd } from 'playwright-bdd';
 import { test, expect } from '../../fixtures/index.js';
 import { SchemaValidator } from '../../api/helpers/schemaValidator.js';
 import { authResponseSchema, errorResponseSchema } from '../../api/schemas/schemas.js';
-import { redactAuth, safeLen, httpSummary } from '../../utils/logging.js';
+import { redactAuth, httpSummary, safeLength } from '../../utils/logging.js';
 
 const { When, Then } = createBdd(test);
 
 /* -------- REGISTER -------- */
-When('I register with email {string} and password {string}',
-  async ({ apiClient, testState, logger }, email, password) => {
-    await test.step('POST /api/register', async () => {
-      const payload = { email, password };
-      logger.step('POST /api/register', { payload: redactAuth(payload) });
-
-      // Tolerăm non-2xx (scenarii negative) => NU aruncă ApiClient
-      const { res, json, text } = await apiClient.register(payload, { throwOnHttpError: false });
-      logger.info('HTTP response', httpSummary(res, json ?? text));
-
-      testState.res = res; testState.json = json; testState.text = text; testState.error = null;
-    });
-  }
-);
-
-Then('registration succeeds', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert register 200');
-    expect(testState.res.status()).toBe(200);
-    SchemaValidator.assert(authResponseSchema, testState.json);
-    logger.info('Register OK');
-  } catch (e) {
-    logger.error('Register assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+When('I register a user with email {string} and password {string}', async ({ apiClient, testState, logger }, email, password) => {
+  await test.step('POST /api/register', async () => {
+    const payload = { email, password };
+    logger.step('POST /api/register', { payload: redactAuth(payload) });
+    const { res, json, text } = await apiClient.register(payload, { throwOnHttpError: false });
+    logger.info('HTTP response', httpSummary(res, json ?? text));
+    testState.res = res; testState.json = json; testState.text = text;
+  });
 });
 
-Then('registration fails with an error', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert register >=400');
-    expect(testState.res.status()).toBeGreaterThanOrEqual(400);
-    SchemaValidator.assert(errorResponseSchema, testState.json);
-    logger.info('Register negative OK', { body: safeLen(testState.json) });
-  } catch (e) {
-    logger.error('Register negative assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+Then('the response contains a user ID', async ({ testState, logger }) => {
+  const id = testState.json?.id;
+  expect(id).toBeTruthy();
+  logger.info('User ID present', { idPreview: String(id).slice(0, 6) + '…' });
+});
+
+Then('the response contains an authentication token', async ({ testState, logger }) => {
+  expect(testState.json?.token).toBeTruthy();
+  logger.info('Auth token present', { tokenPreview: String(testState.json?.token).slice(0, 5) + '…' });
+});
+
+Then('the response contains the error message {string}', async ({ testState, logger }, expected) => {
+  expect(String(testState.json?.error || testState.text || '')).toContain(expected);
+  logger.info('Error message asserted', { expected, bodyPreview: safeLength(testState.json ?? testState.text, 240) });
 });
 
 /* -------- LOGIN -------- */
-When('I login with email {string} and password {string}',
-  async ({ apiClient, testState, logger }, email, password) => {
-    await test.step('POST /api/login', async () => {
-      const payload = { email, password };
-      logger.step('POST /api/login', { payload: redactAuth(payload) });
-
-      // Tolerăm non-2xx (scenarii negative) => NU aruncă ApiClient
-      const { res, json, text } = await apiClient.login(payload, { throwOnHttpError: false });
-      logger.info('HTTP response', httpSummary(res, json ?? text));
-
-      testState.res = res; testState.json = json; testState.text = text; testState.error = null;
-    });
-  }
-);
-
-Then('login succeeds', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert login 200');
-    expect(testState.res.status()).toBe(200);
-    SchemaValidator.assert(authResponseSchema, testState.json);
-    logger.info('Login OK', { hasToken: !!testState.json?.token });
-  } catch (e) {
-    logger.error('Login assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+When('I log in with email {string} and password {string}', async ({ apiClient, testState, logger }, email, password) => {
+  await test.step('POST /api/login', async () => {
+    const payload = { email, password };
+    logger.step('POST /api/login', { payload: redactAuth(payload) });
+    const { res, json, text } = await apiClient.login(payload, { throwOnHttpError: false });
+    logger.info('HTTP response', httpSummary(res, json ?? text));
+    testState.res = res; testState.json = json; testState.text = text;
+  });
 });
 
-Then('login fails with an error', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert login >=400');
-    expect(testState.res.status()).toBeGreaterThanOrEqual(400);
-    SchemaValidator.assert(errorResponseSchema, testState.json);
-    logger.info('Login negative OK', { body: safeLen(testState.json) });
-  } catch (e) {
-    logger.error('Login negative assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+/* -------- GENERIC HTTP ASSERTIONS (reused by both REGISTER/LOGIN) -------- */
+Then('the HTTP response is {int}', async ({ testState, logger }, status) => {
+  expect(testState.res.status()).toBe(status);
+  logger.action('Assert HTTP status exact', { expected: status, actual: testState.res.status() });
+});
+
+Then('the HTTP response is {int} \\({string}\\)', async ({ testState, logger }, status, _label) => {
+  expect(testState.res.status()).toBe(status);
+  logger.action('Assert HTTP status exact (labeled)', { expected: status, label: _label });
 });

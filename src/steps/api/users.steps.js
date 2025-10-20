@@ -5,91 +5,71 @@ import { SchemaValidator } from '../../api/helpers/schemaValidator.js';
 import {
   usersResponseSchema,
   singleUserResponseSchema,
-  createdUserSchema,
-  updatedUserSchema
 } from '../../api/schemas/schemas.js';
-import { TestDataFactory } from '../../api/helpers/testDataFactory.js';
-import { safeLen, sleep, backoffMs, httpSummary } from '../../utils/logging.js';
+import { httpSummary, sleep, backoffMs } from '../../utils/logging.js';
 
-const { When, Then } = createBdd(test);
+const { Given, When, Then } = createBdd(test);
 
-/* ---------- GET /users?page= ---------- */
-When('I fetch users page {int}', async ({ apiClient, testState, logger }, page) => {
+/* ---------- LIST ---------- */
+When('I request the user list for page {int}', async ({ apiClient, testState, logger }, page) => {
   await test.step(`GET /api/users?page=${page}`, async () => {
     logger.step('GET /api/users', { page });
-    // Tolerăm non-2xx (defensiv) ca să logăm conținutul în caz de eșec
     const { res, json, text } = await apiClient.getUsers(page, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
-    testState.res = res; testState.json = json; testState.text = text; testState.error = null;
+    testState.res = res; testState.json = json; testState.text = text;
   });
 });
 
-Then('a users list is returned', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert users list 200');
-    expect(testState.res.status()).toBe(200);
-    SchemaValidator.assert(usersResponseSchema, testState.json);
-    logger.info('Users list OK', { count: testState.json?.data?.length ?? 0 });
-  } catch (e) {
-    logger.error('Users list assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+Then('the response contains correct pagination metadata for page {int}', async ({ testState, logger }, page) => {
+  SchemaValidator.assert(usersResponseSchema, testState.json);
+  expect(testState.json.page).toBe(page);
+  expect(Array.isArray(testState.json.data)).toBe(true);
+  logger.info('Pagination OK', { page: testState.json.page, total: testState.json.total });
 });
 
-/* ---------- GET /users/{id} ---------- */
-When('I fetch user with id {string}', async ({ apiClient, testState, logger }, id) => {
+Then('the response contains a list of users', async ({ testState }) => {
+  expect(Array.isArray(testState.json?.data)).toBe(true);
+  expect(testState.json.data.length).toBeGreaterThan(0);
+});
+
+Then('the response contains an empty list of users', async ({ testState }) => {
+  expect(Array.isArray(testState.json?.data)).toBe(true);
+  expect(testState.json.data.length).toBe(0);
+});
+
+/* ---------- READ ONE ---------- */
+When('I request the user details for ID {string}', async ({ apiClient, testState, logger }, id) => {
   await test.step(`GET /api/users/${id}`, async () => {
     logger.step('GET /api/users/{id}', { id });
-    // Același step deservește și negativele (404) => NU aruncăm
     const { res, json, text } = await apiClient.getUser(id, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
-    testState.res = res; testState.json = json; testState.text = text; testState.error = null;
+    testState.res = res; testState.json = json; testState.text = text;
   });
 });
 
-Then('a single user is returned', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert single user 200');
-    expect(testState.res.status()).toBe(200);
-    SchemaValidator.assert(singleUserResponseSchema, testState.json);
-    logger.info('Single user OK', { id: testState.json?.data?.id });
-  } catch (e) {
-    logger.error('Single user assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+Then('the response contains the user data for ID {string}', async ({ testState, logger }, id) => {
+  SchemaValidator.assert(singleUserResponseSchema, testState.json);
+  expect(String(testState.json?.data?.id)).toBe(String(id));
+  logger.info('Single user OK', { id: testState.json?.data?.id });
 });
 
-Then('the user is not found', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert 404 not found');
-    expect(testState.res.status()).toBe(404);
-    logger.info('Not found OK');
-  } catch (e) {
-    logger.error('Not found assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+/* ---------- CREATE ---------- */
+Given('I have prepared data for a new user with name {string} and job {string}', async ({ testState, logger }, name, job) => {
+  testState.createPayload = { name, job };
+  logger.step('Prepared create payload', { payload: testState.createPayload });
 });
 
-/* ---------- POST /users ---------- */
-When('I create a random user', async ({ apiClient, testState , logger }) => {
-  const payload = TestDataFactory.generateRandomUser();
+When('I send the create user request', async ({ apiClient, testState, logger }) => {
   await test.step('POST /api/users', async () => {
-    logger.step('POST /api/users', { payload });
-
-    // Anti-flake: retry mic DOAR pe 429 (ReqRes rate-limit la burst)
+    const payload = testState.createPayload ?? { name: `User ${Date.now()}`, job: 'Tester' };
     const maxAttempts = Number(process.env.API_WRITE_MAX_ATTEMPTS || 3);
     const baseDelay = Number(process.env.API_WRITE_BACKOFF_MS || 300);
 
     let lastRes, lastJson, lastText;
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      const { res, json, text } = await apiClient.createUser(
-        payload,
-        { throwOnHttpError: false } // NU aruncăm; decidem noi cum tratăm 429
-      );
+      const { res, json, text } = await apiClient.createUser(payload, { throwOnHttpError: false });
       lastRes = res; lastJson = json; lastText = text;
-
-      logger.info('Create attempt', { attempt, status: res.status(), url: res.url() });
-
+      logger.info('Create attempt', { attempt, status: res.status() });
       if (res.status() === 201) break;
       if (res.status() === 429 && attempt < maxAttempts) {
         const wait = backoffMs(attempt, baseDelay);
@@ -97,66 +77,122 @@ When('I create a random user', async ({ apiClient, testState , logger }) => {
         await sleep(wait);
         continue;
       }
-      break; // alt status ≠ 201/429 → nu repetăm
+      break;
     }
-
     logger.info('HTTP response (final)', httpSummary(lastRes, lastJson ?? lastText));
-    testState.res = lastRes; testState.json = lastJson; testState.text = lastText; testState.error = null;
+    testState.res = lastRes; testState.json = lastJson; testState.text = lastText;
   });
 });
 
-Then('the user is created', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert created 201');
-    expect(testState.res.status()).toBe(201);
-    SchemaValidator.assert(createdUserSchema, testState.json);
-    logger.info('Create OK', { id: testState.json?.id });
-  } catch (e) {
-    logger.error('Create assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
+Then('the response contains the name {string} and job {string}', async ({ testState }, name, job) => {
+  expect(testState.json?.name).toBe(name);
+  expect(testState.json?.job).toBe(job);
+});
+
+Then('the response contains a newly generated user ID', async ({ testState }) => {
+  expect(testState.json?.id).toBeTruthy();
+});
+
+Then('the response contains a creation timestamp', async ({ testState }) => {
+  expect(String(testState.json?.createdAt)).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+});
+
+/* bulk create */
+When('I send a create request for the following users:', async ({ apiClient, testState, logger }, dataTable) => {
+  const rows = dataTable?.hashes?.() ?? [];
+  if (!rows.length) throw new Error('DataTable must contain at least one row');
+  testState.bulkCreated = [];
+
+  for (const row of rows) {
+    await test.step(`POST /api/users (${row.name})`, async () => {
+      const payload = { name: String(row.name).trim(), job: String(row.job).trim() };
+      const { res, json, text } = await apiClient.createUser(payload, { throwOnHttpError: false });
+      logger.info('HTTP response', httpSummary(res, json ?? text));
+      testState.bulkCreated.push({ res, json, payload });
+    });
   }
 });
 
-/* ---------- PUT /users/{id} ---------- */
-When('I update user {string} with a new job', async ({ apiClient, testState, logger }, id) => {
-  const update = { name: `Updated ${Date.now()}`, job: 'QA Lead' };
-  await test.step(`PUT /api/users/${id}`, async () => {
-    logger.step('PUT /api/users/{id}', { id, update });
-    const { res, json, text } = await apiClient.updateUser(id, update, { throwOnHttpError: false });
+Then('all create requests are successful', async ({ testState }) => {
+  const bulk = testState.bulkCreated || [];
+  expect(bulk.length).toBeGreaterThan(0);
+  for (const { res } of bulk) expect(res.status()).toBe(201);
+});
+
+Then('I can verify that user {string} was created with job {string}', async ({ testState }, name, job) => {
+  const found = testState.bulkCreated.find(e => e.json?.name === name && e.json?.job === job);
+  expect(!!found).toBe(true);
+});
+
+/* negative create */
+When('I send the create user request with name {string} and job {string}', async ({ apiClient, testState, logger }, name, job) => {
+  await test.step('POST /api/users (negative)', async () => {
+    const payload = { name: name || '', job: job || '' };
+    const { res, json, text } = await apiClient.createUser(payload, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
-    testState.res = res; testState.json = json; testState.text = text; testState.error = null;
+    testState.res = res; testState.json = json; testState.text = text;
   });
 });
 
-Then('the user is updated', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert updated 200');
-    expect(testState.res.status()).toBe(200);
-    SchemaValidator.assert(updatedUserSchema, testState.json);
-    logger.info('Update OK');
-  } catch (e) {
-    logger.error('Update assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+/* ---------- UPDATE (PUT/PATCH) ---------- */
+Given('I want to update user {string} with name {string} and job {string}', async ({ testState, logger }, id, name, job) => {
+  testState.updateId = id;
+  testState.updatePayload = { name, job };
+  logger.step('Prepared PUT payload', { id, payload: testState.updatePayload });
 });
 
-/* ---------- DELETE /users/{id} ---------- */
-When('I delete user {string}', async ({ apiClient, testState, logger }, id) => {
+Given('I want to update user {string} with only the job {string}', async ({ testState, logger }, id, job) => {
+  testState.updateId = id;
+  testState.updatePayload = { job };
+  logger.step('Prepared PATCH payload', { id, payload: testState.updatePayload });
+});
+
+When('I send a PUT request for user {string}', async ({ apiClient, testState, logger }, id) => {
+  await test.step(`PUT /api/users/${id}`, async () => {
+    const payload = testState.updatePayload ?? { name: `Updated ${Date.now()}`, job: 'QA Lead' };
+    const { res, json, text } = await apiClient.updateUser(id, payload, { throwOnHttpError: false });
+    logger.info('HTTP response', httpSummary(res, json ?? text));
+    testState.res = res; testState.json = json; testState.text = text;
+  });
+});
+
+When('I send a PATCH request for user {string}', async ({ apiClient, testState, logger }, id) => {
+  await test.step(`PATCH /api/users/${id}`, async () => {
+    const payload = testState.updatePayload ?? { job: 'Zion Resident' };
+    const { res, json, text } = await apiClient.patchUser?.(id, payload, { throwOnHttpError: false })
+      ?? await apiClient.updateUser(id, payload, { throwOnHttpError: false });
+    logger.info('HTTP response', httpSummary(res, json ?? text));
+    testState.res = res; testState.json = json; testState.text = text;
+  });
+});
+
+/* Soft checks pentru UPDATE – reqres trimite, de regulă, doar updatedAt */
+Then('the response contains the updated name {string} and job {string}', async ({ testState }, name, job) => {
+  expect(String(testState.json?.updatedAt)).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  if (testState.json?.name !== undefined) expect(testState.json.name).toBe(name);
+  if (testState.json?.job !== undefined) expect(testState.json.job).toBe(job);
+});
+
+Then('the response contains the updated job {string}', async ({ testState }, job) => {
+  expect(String(testState.json?.updatedAt)).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  if (testState.json?.job !== undefined) expect(testState.json.job).toBe(job);
+});
+
+Then('the response contains an update timestamp', async ({ testState }) => {
+  expect(String(testState.json?.updatedAt)).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+});
+
+/* ---------- DELETE ---------- */
+When('I send a delete request for user {string}', async ({ apiClient, testState, logger }, id) => {
   await test.step(`DELETE /api/users/${id}`, async () => {
-    logger.step('DELETE /api/users/{id}', { id });
     const { res, json, text } = await apiClient.deleteUser(id, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
-    testState.res = res; testState.json = json; testState.text = text; testState.error = null;
+    testState.res = res; testState.json = json; testState.text = text;
+    testState.lastDeletedId = id;
   });
 });
 
-Then('the user is deleted', async ({ testState, logger }) => {
-  try {
-    logger.action('Assert deleted 204');
-    expect(testState.res.status()).toBe(204);
-    logger.info('Delete OK');
-  } catch (e) {
-    logger.error('Delete assertion failed', { status: testState.res?.status?.(), url: testState.res?.url?.() });
-    throw e;
-  }
+Then('the response has no content', async ({ testState }) => {
+  const body = testState.text ?? '';
+  expect(body === '' || body === undefined || body === null).toBe(true);
 });

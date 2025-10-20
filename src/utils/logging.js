@@ -5,18 +5,18 @@
 export const mask = (s) => (typeof s === 'string' && s.length ? '***' : s);
 
 /** Redactare generică pe chei sensibile */
-export function redact(obj, keys = ['password', 'token', 'apiKey', 'authorization', 'Authorization']) {
+export function redactGeneric(obj, keys = ['password', 'token', 'apiKey', 'authorization', 'Authorization']) {
   if (!obj || typeof obj !== 'object') return obj;
-  const out = Array.isArray(obj) ? obj.map((v) => redact(v, keys)) : { ...obj };
+  const out = Array.isArray(obj) ? obj.map((v) => redactGeneric(v, keys)) : { ...obj };
   for (const k of Object.keys(out)) {
     if (keys.includes(k)) out[k] = mask(out[k]);
-    else if (out[k] && typeof out[k] === 'object') out[k] = redact(out[k], keys);
+    else if (out[k] && typeof out[k] === 'object') out[k] = redactGeneric(out[k], keys);
   }
   return out;
 }
 
 /** Redactare rapidă pentru payload-uri de auth (email/parolă) */
-export const redactAuth = (payload) => redact(payload, ['password', 'token']);
+export const redactAuth = (payload) => redactGeneric(payload, ['password', 'token']);
 
 /** Stringify sigur (tolerant la cicluri) */
 export function stringifySafe(value, space = 0) {
@@ -35,7 +35,7 @@ export function stringifySafe(value, space = 0) {
 }
 
 /** Trunchiere la N caractere (pentru body mare) */
-export function safeLen(v, n = 800) {
+export function safeLength(v, n = 800) {
   try {
     const s = typeof v === 'string' ? v : stringifySafe(v);
     return s && s.length > n ? s.slice(0, n) + '…' : s;
@@ -48,7 +48,7 @@ export function safeLen(v, n = 800) {
 export function httpSummary(res, body) {
   const status = res?.status?.();
   const url = res?.url?.();
-  return { status, url, body: safeLen(body) };
+  return { status, url, body: safeLength(body) };
 }
 
 /** Sumar de eroare pentru loguri Allure/pino (inclusiv cause, dacă există) */
@@ -58,7 +58,7 @@ export function errorSummary(e) {
     message: e?.message,
     status: e?.status,
     url: e?.url,
-    body: safeLen(e?.body),
+    body: safeLength(e?.body),
     cause: e?.cause?.name || undefined,
     causeMessage: e?.cause?.message || undefined,
   };

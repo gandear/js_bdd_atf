@@ -6,8 +6,9 @@ import { TestDataManager } from '../api/helpers/testDataManager.js';
 export const apiFixtures = {
   ...testStateFixtures, // Include testState fixture
 
-  apiClient: async ({ request }, use) => {
-    await use(new ApiClient(request));
+  apiClient: async ({ request }, use, testInfo) => {
+    const baseURL = testInfo?.project?.use?.baseURL ?? process.env.API_BASE_URL ?? '';
+    await use(new ApiClient(request, { baseURL }));
   },
 
   testDataManager: async ({ apiClient }, use, testInfo) => {

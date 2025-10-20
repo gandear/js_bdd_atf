@@ -1,0 +1,95 @@
+// Generated from: src\features\api\auth.feature
+import { test } from "../../../../../src/fixtures/index.js";
+
+test.describe('User Authentication', () => {
+
+  test.beforeEach('Background', async ({ Given, And, apiClient, logger, testState }, testInfo) => { if (testInfo.error) return;
+    await Given('the authentication endpoint is configured', null, { logger }); 
+    await And('the API client is ready', null, { apiClient, logger }); 
+    await And('no previous auth token is set', null, { apiClient, logger, testState }); 
+  });
+  
+  test('Register a new user with valid credentials', { tag: ['@api', '@auth', '@positive', '@register'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+    await When('I register a user with email "eve.holt@reqres.in" and password "pistol"', null, { apiClient, logger, testState }); 
+    await Then('the HTTP response is 200', null, { logger, testState }); 
+    await And('the response contains a user ID', null, { logger, testState }); 
+    await And('the response contains an authentication token', null, { logger, testState }); 
+  });
+
+  test.describe('Registration fails when data is invalid or missing', () => {
+
+    test('Example #1', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+      await When('I register a user with email "sydney@fife" and password ""', null, { apiClient, logger, testState }); 
+      await Then('the HTTP response is 400', null, { logger, testState }); 
+      await And('the response contains the error message "Missing password"', null, { logger, testState }); 
+    });
+
+    test('Example #2', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+      await When('I register a user with email "" and password "pass"', null, { apiClient, logger, testState }); 
+      await Then('the HTTP response is 400', null, { logger, testState }); 
+      await And('the response contains the error message "Missing email"', null, { logger, testState }); 
+    });
+
+    test('Example #3', { tag: ['@api', '@auth', '@negative', '@register'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+      await When('I register a user with email "invalid-email" and password "pass"', null, { apiClient, logger, testState }); 
+      await Then('the HTTP response is 400', null, { logger, testState }); 
+      await And('the response contains the error message "Note: Only defined users succeed registration"', null, { logger, testState }); 
+    });
+
+  });
+
+  test.describe('Login succeeds with valid credentials', () => {
+
+    test('Example #1', { tag: ['@api', '@auth', '@positive', '@login'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+      await When('I log in with email "eve.holt@reqres.in" and password "cityslicka"', null, { apiClient, logger, testState }); 
+      await Then('the HTTP response is 200', null, { logger, testState }); 
+      await And('the response contains an authentication token', null, { logger, testState }); 
+    });
+
+  });
+
+  test.describe('Login fails with invalid or missing credentials', () => {
+
+    test('Example #1', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+      await When('I log in with email "" and password "pass"', null, { apiClient, logger, testState }); 
+      await Then('the HTTP response is 400', null, { logger, testState }); 
+      await And('the response contains the error message "Missing email"', null, { logger, testState }); 
+    });
+
+    test('Example #2', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+      await When('I log in with email "peter.klaven@reqres.in" and password ""', null, { apiClient, logger, testState }); 
+      await Then('the HTTP response is 400', null, { logger, testState }); 
+      await And('the response contains the error message "Missing password"', null, { logger, testState }); 
+    });
+
+    test('Example #3', { tag: ['@api', '@auth', '@negative', '@login'] }, async ({ When, Then, And, apiClient, logger, testState }) => { 
+      await When('I log in with email "bad@email.com" and password "secret"', null, { apiClient, logger, testState }); 
+      await Then('the HTTP response is 400', null, { logger, testState }); 
+      await And('the response contains the error message "user not found"', null, { logger, testState }); 
+    });
+
+  });
+
+});
+
+// == technical section ==
+
+test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, logger, testInfo }) => $runScenarioHooks('before', { logger, testInfo }));
+test.afterEach('AfterEach Hooks', ({ $runScenarioHooks, logger, page, testInfo }) => $runScenarioHooks('after', { logger, page, testInfo }));
+
+test.use({
+  $test: [({}, use) => use(test), { scope: 'test', box: true }],
+  $uri: [({}, use) => use('src\\features\\api\\auth.feature'), { scope: 'test', box: true }],
+  $bddFileData: [({}, use) => use(bddFileData), { scope: "test", box: true }],
+});
+
+const bddFileData = [ // bdd-data-start
+  {"pwTestLine":12,"pickleLine":11,"tags":["@api","@auth","@positive","@register"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":13,"gherkinStepLine":12,"keywordType":"Action","textWithKeyword":"When I register a user with email \"eve.holt@reqres.in\" and password \"pistol\"","stepMatchArguments":[{"group":{"start":29,"value":"\"eve.holt@reqres.in\"","children":[{"start":30,"value":"eve.holt@reqres.in","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":63,"value":"\"pistol\"","children":[{"start":64,"value":"pistol","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":14,"gherkinStepLine":13,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 200","stepMatchArguments":[{"group":{"start":21,"value":"200","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":15,"gherkinStepLine":14,"keywordType":"Outcome","textWithKeyword":"And the response contains a user ID","stepMatchArguments":[]},{"pwStepLine":16,"gherkinStepLine":15,"keywordType":"Outcome","textWithKeyword":"And the response contains an authentication token","stepMatchArguments":[]}]},
+  {"pwTestLine":21,"pickleLine":24,"tags":["@api","@auth","@negative","@register"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":22,"gherkinStepLine":19,"keywordType":"Action","textWithKeyword":"When I register a user with email \"sydney@fife\" and password \"\"","stepMatchArguments":[{"group":{"start":29,"value":"\"sydney@fife\"","children":[{"start":30,"value":"sydney@fife","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":56,"value":"\"\"","children":[{"start":57,"value":"","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":23,"gherkinStepLine":20,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 400","stepMatchArguments":[{"group":{"start":21,"value":"400","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":24,"gherkinStepLine":21,"keywordType":"Outcome","textWithKeyword":"And the response contains the error message \"Missing password\"","stepMatchArguments":[{"group":{"start":40,"value":"\"Missing password\"","children":[{"start":41,"value":"Missing password","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":27,"pickleLine":25,"tags":["@api","@auth","@negative","@register"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":28,"gherkinStepLine":19,"keywordType":"Action","textWithKeyword":"When I register a user with email \"\" and password \"pass\"","stepMatchArguments":[{"group":{"start":29,"value":"\"\"","children":[{"start":30,"value":"","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":45,"value":"\"pass\"","children":[{"start":46,"value":"pass","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":29,"gherkinStepLine":20,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 400","stepMatchArguments":[{"group":{"start":21,"value":"400","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":30,"gherkinStepLine":21,"keywordType":"Outcome","textWithKeyword":"And the response contains the error message \"Missing email\"","stepMatchArguments":[{"group":{"start":40,"value":"\"Missing email\"","children":[{"start":41,"value":"Missing email","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":33,"pickleLine":26,"tags":["@api","@auth","@negative","@register"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":34,"gherkinStepLine":19,"keywordType":"Action","textWithKeyword":"When I register a user with email \"invalid-email\" and password \"pass\"","stepMatchArguments":[{"group":{"start":29,"value":"\"invalid-email\"","children":[{"start":30,"value":"invalid-email","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":58,"value":"\"pass\"","children":[{"start":59,"value":"pass","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":35,"gherkinStepLine":20,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 400","stepMatchArguments":[{"group":{"start":21,"value":"400","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":36,"gherkinStepLine":21,"keywordType":"Outcome","textWithKeyword":"And the response contains the error message \"Note: Only defined users succeed registration\"","stepMatchArguments":[{"group":{"start":40,"value":"\"Note: Only defined users succeed registration\"","children":[{"start":41,"value":"Note: Only defined users succeed registration","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":43,"pickleLine":36,"tags":["@api","@auth","@positive","@login"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":44,"gherkinStepLine":31,"keywordType":"Action","textWithKeyword":"When I log in with email \"eve.holt@reqres.in\" and password \"cityslicka\"","stepMatchArguments":[{"group":{"start":20,"value":"\"eve.holt@reqres.in\"","children":[{"start":21,"value":"eve.holt@reqres.in","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":54,"value":"\"cityslicka\"","children":[{"start":55,"value":"cityslicka","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":45,"gherkinStepLine":32,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 200","stepMatchArguments":[{"group":{"start":21,"value":"200","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":46,"gherkinStepLine":33,"keywordType":"Outcome","textWithKeyword":"And the response contains an authentication token","stepMatchArguments":[]}]},
+  {"pwTestLine":53,"pickleLine":45,"tags":["@api","@auth","@negative","@login"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":54,"gherkinStepLine":40,"keywordType":"Action","textWithKeyword":"When I log in with email \"\" and password \"pass\"","stepMatchArguments":[{"group":{"start":20,"value":"\"\"","children":[{"start":21,"value":"","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":36,"value":"\"pass\"","children":[{"start":37,"value":"pass","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":55,"gherkinStepLine":41,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 400","stepMatchArguments":[{"group":{"start":21,"value":"400","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":56,"gherkinStepLine":42,"keywordType":"Outcome","textWithKeyword":"And the response contains the error message \"Missing email\"","stepMatchArguments":[{"group":{"start":40,"value":"\"Missing email\"","children":[{"start":41,"value":"Missing email","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":59,"pickleLine":46,"tags":["@api","@auth","@negative","@login"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":60,"gherkinStepLine":40,"keywordType":"Action","textWithKeyword":"When I log in with email \"peter.klaven@reqres.in\" and password \"\"","stepMatchArguments":[{"group":{"start":20,"value":"\"peter.klaven@reqres.in\"","children":[{"start":21,"value":"peter.klaven@reqres.in","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":58,"value":"\"\"","children":[{"start":59,"value":"","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":61,"gherkinStepLine":41,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 400","stepMatchArguments":[{"group":{"start":21,"value":"400","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":62,"gherkinStepLine":42,"keywordType":"Outcome","textWithKeyword":"And the response contains the error message \"Missing password\"","stepMatchArguments":[{"group":{"start":40,"value":"\"Missing password\"","children":[{"start":41,"value":"Missing password","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":65,"pickleLine":47,"tags":["@api","@auth","@negative","@login"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Context","textWithKeyword":"Given the authentication endpoint is configured","isBg":true,"stepMatchArguments":[]},{"pwStepLine":8,"gherkinStepLine":6,"keywordType":"Context","textWithKeyword":"And the API client is ready","isBg":true,"stepMatchArguments":[]},{"pwStepLine":9,"gherkinStepLine":7,"keywordType":"Context","textWithKeyword":"And no previous auth token is set","isBg":true,"stepMatchArguments":[]},{"pwStepLine":66,"gherkinStepLine":40,"keywordType":"Action","textWithKeyword":"When I log in with email \"bad@email.com\" and password \"secret\"","stepMatchArguments":[{"group":{"start":20,"value":"\"bad@email.com\"","children":[{"start":21,"value":"bad@email.com","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"},{"group":{"start":49,"value":"\"secret\"","children":[{"start":50,"value":"secret","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":67,"gherkinStepLine":41,"keywordType":"Outcome","textWithKeyword":"Then the HTTP response is 400","stepMatchArguments":[{"group":{"start":21,"value":"400","children":[]},"parameterTypeName":"int"}]},{"pwStepLine":68,"gherkinStepLine":42,"keywordType":"Outcome","textWithKeyword":"And the response contains the error message \"user not found\"","stepMatchArguments":[{"group":{"start":40,"value":"\"user not found\"","children":[{"start":41,"value":"user not found","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+]; // bdd-data-end

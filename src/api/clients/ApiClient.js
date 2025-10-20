@@ -10,14 +10,15 @@ import { ApiError, TimeoutError, NetworkError, ParseError } from './errors.js';
 
 export class ApiClient {
 
-  constructor(request, { defaultHeaders = {}, defaultTimeoutMs = 10_000 } = {}) {
+  constructor(request, { defaultHeaders = {}, defaultTimeoutMs = 10_000, baseURL } = {}) {
     this.request = request;
+    this.baseURL = baseURL;
     this.authToken = null;
     this.defaultHeaders = defaultHeaders;
     this.defaultTimeoutMs = defaultTimeoutMs;
   }
 
-  setAuthToken(token) {
+   setAuthToken(token) {
     this.authToken = token;
   }
 
