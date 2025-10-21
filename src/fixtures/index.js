@@ -2,7 +2,7 @@
 import { test as base } from 'playwright-bdd';
 import { expect } from '@playwright/test';
 
-import { testInfoFixture } from './testinfo.fixture.js';   // <— lipsise
+import { testInfoFixture } from './testinfo.fixture.js'; 
 import { loggerFixtures } from './logger.fixture.js';
 import { uiFixtures } from './ui.fixture.js';
 import { apiFixtures } from './api.fixture.js';
