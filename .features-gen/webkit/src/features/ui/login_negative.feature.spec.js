@@ -40,7 +40,6 @@ test.describe('Login with Invalid or Missing Credentials', () => {
 
 // == technical section ==
 
-test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, logger, testInfo }) => $runScenarioHooks('before', { logger, testInfo }));
 test.afterEach('AfterEach Hooks', ({ $runScenarioHooks, logger, page, testInfo }) => $runScenarioHooks('after', { logger, page, testInfo }));
 
 test.use({

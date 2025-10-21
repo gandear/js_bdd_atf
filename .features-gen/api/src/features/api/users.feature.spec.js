@@ -166,9 +166,6 @@ test.describe('User Management (API)', () => {
 
 // == technical section ==
 
-test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, logger, testInfo }) => $runScenarioHooks('before', { logger, testInfo }));
-test.afterEach('AfterEach Hooks', ({ $runScenarioHooks, logger, page, testInfo }) => $runScenarioHooks('after', { logger, page, testInfo }));
-
 test.use({
   $test: [({}, use) => use(test), { scope: 'test', box: true }],
   $uri: [({}, use) => use('src\\features\\api\\users.feature'), { scope: 'test', box: true }],
