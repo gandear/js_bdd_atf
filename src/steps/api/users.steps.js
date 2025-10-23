@@ -59,29 +59,14 @@ Given('I have prepared data for a new user with name {string} and job {string}',
   logger.step('Prepared create payload', { payload: testState.createPayload });
 });
 
-When('I send the create user request', async ({ apiClient, testState, logger }) => {
+When('I send the create user request', async ({ testDataManager, testState, logger }) => {
   await test.step('POST /api/users', async () => {
     const payload = testState.createPayload ?? { name: `User ${Date.now()}`, job: 'Tester' };
-    const maxAttempts = Number(process.env.API_WRITE_MAX_ATTEMPTS || 3);
-    const baseDelay = Number(process.env.API_WRITE_BACKOFF_MS || 300);
+    const { res, json, text } = await testDataManager.createTestUser(payload); 
 
-    let lastRes, lastJson, lastText;
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      const { res, json, text } = await apiClient.createUser(payload, { throwOnHttpError: false });
-      lastRes = res; lastJson = json; lastText = text;
-      logger.info('Create attempt', { attempt, status: res.status() });
-      if (res.status() === 201) break;
-      if (res.status() === 429 && attempt < maxAttempts) {
-        const wait = backoffMs(attempt, baseDelay);
-        logger.warn('429 rate-limited, backoff', { attempt, waitMs: wait });
-        await sleep(wait);
-        continue;
-      }
-      break;
-    }
-    logger.info('HTTP response (final)', httpSummary(lastRes, lastJson ?? lastText));
-    testState.res = lastRes; testState.json = lastJson; testState.text = lastText;
-  });
+    logger.info('HTTP response (final)', httpSummary(res, json ?? text));
+    testState.res = res; testState.json = json; testState.text = text;
+});
 });
 
 Then('the response contains the name {string} and job {string}', async ({ testState }, name, job) => {

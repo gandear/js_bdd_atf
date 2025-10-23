@@ -14,14 +14,20 @@ function normalizeExampleLabel(s = '') {
 
 export function buildTestName(testInfo, opts = {}) {
   const separator = opts.separator ?? '_';
-  const path = getTitlePath(testInfo);                 // ex: ["Login", "Login with Invalid...", "Example 1"]
-  const last = path[path.length - 1] || '';
-  const prev = path[path.length - 2] || '';
-
+  const path = getTitlePath(testInfo);
+  
+  // ✅ FIX: Folosește ultimul element (scenario name), nu penultimul
+  const last = path[path.length - 1] || testInfo.title || 'test';
+  
+  // ✅ Detectează dacă e Scenario Outline (Example #N)
   const example = normalizeExampleLabel(last);
-  const scenario = prev || last || testInfo.title || 'test';
-
-  let name = example ? `${scenario}${separator}${example}` : scenario;
-
-  return name;
+  
+  if (example) {
+    // Scenario Outline: "Feature > Scenario > Example #1"
+    const scenario = path[path.length - 2] || 'scenario';
+    return `${scenario}${separator}${example}`;
+  }
+  
+  // ✅ Scenario normal: folosește direct scenario name
+  return last;
 }

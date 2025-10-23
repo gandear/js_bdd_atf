@@ -72,11 +72,11 @@ export class ApiClient {
     return { res, json, text };
   }
 
-  get(path, headers, opts)        { return this.requestWithHandling('get', path, { headers, ...(opts || {}) }); }
-  post(path, data, headers, opts) { return this.requestWithHandling('post', path, { data, headers, ...(opts || {}) }); }
-  put(path, data, headers, opts)  { return this.requestWithHandling('put', path, { data, headers, ...(opts || {}) }); }
-  delete(path, headers, opts)     { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
-  patch(path, data, headers, opts){ return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
+  get(path, headers, opts)          { return this.requestWithHandling('get', path, { headers, ...(opts || {}) }); }
+  post(path, data, headers, opts)   { return this.requestWithHandling('post', path, { data, headers, ...(opts || {}) }); }
+  put(path, data, headers, opts)    { return this.requestWithHandling('put', path, { data, headers, ...(opts || {}) }); }
+  delete(path, headers, opts)       { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
+  patch(path, data, headers, opts)  { return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
 
   getUsers(page = 1, opts)          { return this.get(`/api/users`, undefined, { ...(opts || {}), query: { page } }); }
   getUser(id, opts)                 { return this.get(`/api/users/${id}`, undefined, opts); }

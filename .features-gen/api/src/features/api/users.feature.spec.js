@@ -73,9 +73,9 @@ test.describe('User Management (API)', () => {
 
   });
 
-  test('Create a new user with valid data', { tag: ['@api', '@users', '@write', '@create', '@positive'] }, async ({ Given, When, Then, And, apiClient, logger, testState }) => { 
+  test('Create a new user with valid data', { tag: ['@api', '@users', '@write', '@create', '@positive'] }, async ({ Given, When, Then, And, logger, testDataManager, testState }) => { 
     await Given('I have prepared data for a new user with name "Morpheus" and job "Leader"', null, { logger, testState }); 
-    await When('I send the create user request', null, { apiClient, logger, testState }); 
+    await When('I send the create user request', null, { logger, testDataManager, testState }); 
     await Then('the HTTP response is 201', null, { logger, testState }); 
     await And('the response contains the name "Morpheus" and job "Leader"', null, { testState }); 
     await And('the response contains a newly generated user ID', null, { testState }); 
