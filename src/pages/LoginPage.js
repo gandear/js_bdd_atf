@@ -55,12 +55,6 @@ export class LoginPage extends BasePage {
     this.logger.action('Submit login form');
     await this.clickElement(this.loginButton);
     
-    // Wait for response (navigation or error message)
-    // await Promise.race([
-    //   this.page.waitForNavigation({ waitUntil: 'networkidle', timeout: 5000 }).catch(() => null),
-    //   this.page.waitForSelector(this.errorBannerContainer, { timeout: 3000 }).catch(() => null)
-    // ]);
-
    await Promise.race([
      this.page.waitForURL(/dashboard/, { timeout: 5000 }).catch(() => null),
      this.page.waitForSelector(this.errorBannerContainer, { timeout: 3000 }).catch(() => null)

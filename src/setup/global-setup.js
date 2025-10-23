@@ -1,15 +1,18 @@
 // ./src/setup/global-setup.js
+
 import { getRunStamp } from '../utils/run-stamp.js';
+import { ConfigValidator } from '../config/configValidator.js';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
 async function globalSetup() {
+  // Validate config first
+  ConfigValidator.validate();
+  
   const { RUN_DATE, RUN_TIME } = getRunStamp();
   
   process.env.RUN_DATE = RUN_DATE;
   process.env.RUN_TIME = RUN_TIME;
-
-  //console.log(`[Global Setup] Set RUN_DATE=${RUN_DATE}, RUN_TIME=${RUN_TIME}`);
 
   try {
     const metaPath = join(process.cwd(), 'logs', '.current-run.json');

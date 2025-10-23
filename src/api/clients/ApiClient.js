@@ -1,14 +1,16 @@
-// src/api/clients/ApiClient.js
 import { ApiError, TimeoutError, NetworkError } from './errors.js';
+import { HeadersManager } from '../helpers/headersManager.js';
 
 export class ApiClient {
 
-  constructor(request, { defaultHeaders = {}, defaultTimeoutMs = 10_000, baseURL } = {}) {
+  constructor(request, { defaultHeaders = {}, defaultTimeoutMs = 10_000, baseURL, authScheme = 'bearer', apiKeyHeader = 'x-api-key' } = {}) {
     this.request = request;
     this.baseURL = baseURL;
     this.authToken = null;
     this.defaultHeaders = defaultHeaders;
     this.defaultTimeoutMs = defaultTimeoutMs;
+    this.authScheme = authScheme;
+    this.apiKeyHeader = apiKeyHeader;
   }
 
   setAuthToken(token) {
@@ -22,9 +24,11 @@ export class ApiClient {
   }
 
   mergeHeaders(headers) {
-    const merged = { Accept: 'application/json, text/plain;q=0.9', ...this.defaultHeaders, ...(headers || {}) };
-    if (this.authToken && !merged.Authorization) merged.Authorization = `Bearer ${this.authToken}`;
-    return merged;
+    return HeadersManager.merge(this.defaultHeaders, headers, {
+      authToken: this.authToken,
+      authScheme: this.authScheme,
+      apiKeyHeader: this.apiKeyHeader
+    });
   }
 
   async requestWithHandling(method, path, options = {}) {
@@ -74,7 +78,6 @@ export class ApiClient {
   delete(path, headers, opts)     { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
   patch(path, data, headers, opts){ return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
 
-  // ReqRes endpoints
   getUsers(page = 1, opts)          { return this.get(`/api/users`, undefined, { ...(opts || {}), query: { page } }); }
   getUser(id, opts)                 { return this.get(`/api/users/${id}`, undefined, opts); }
   createUser(user, opts)            { return this.post(`/api/users`, user, { 'Content-Type': 'application/json' }, opts); }
