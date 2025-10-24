@@ -67,7 +67,7 @@ export default defineConfig({
         'Test Type': 'BDD + Playwright API & UI'
       }
     }],
-    // ['./src/utils/cleanup-reporter.js']
+    ['./src/utils/cleanup-reporter.js']
   ],
 
   // fallback global (UI proiectele pot suprascrie)

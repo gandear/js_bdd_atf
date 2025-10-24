@@ -1,52 +1,68 @@
 // src/api/clients/errors.js
+/**
+ * General API error classes and a single serialized error helper.
+ */
+
 export class ApiError extends Error {
-  constructor(message, { status, url, body, cause } = {}) {
+  constructor(message, opts = {}) {
     super(message);
     this.name = 'ApiError';
-    this.status = status;
-    this.url = url;
-    this.body = body;
-    // suportă și Error.cause dacă e disponibil
-    if (cause) this.cause = cause;
+    if (opts.url) this.url = opts.url;
+    if (opts.status !== undefined) this.status = opts.status;
+    if (opts.cause) this.cause = opts.cause;
   }
 }
 
-export class TimeoutError extends ApiError {
-  constructor(timeoutMs, ctx = {}) {
-    super(`Timeout after ${timeoutMs}ms`, ctx);
-    this.name = 'TimeoutError';
-    this.timeoutMs = timeoutMs;
-  }
-}
-
-export class NetworkError extends ApiError {
-  constructor(message = 'Network error', ctx = {}) {
-    super(message, ctx);
+export class NetworkError extends Error {
+  constructor(message, opts = {}) {
+    super(message);
     this.name = 'NetworkError';
+    if (opts.url) this.url = opts.url;
+    if (opts.cause) this.cause = opts.cause;
   }
 }
 
-export class ParseError extends ApiError {
-  constructor(message = 'Invalid JSON', ctx = {}) {
-    super(message, ctx);
-    this.name = 'ParseError';
+export class TimeoutError extends Error {
+  constructor(timeoutMs, opts = {}) {
+    super(`Request timed out after ${timeoutMs}ms`);
+    this.name = 'TimeoutError';
+    this.timeout = timeoutMs;
+    if (opts.url) this.url = opts.url;
+    if (opts.cause) this.cause = opts.cause;
   }
 }
 
-// opțional: mici utilitare
-export const isTimeoutError = (e) => e instanceof TimeoutError;
-export const isNetworkError = (e) => e instanceof NetworkError;
-export const isParseError   = (e) => e instanceof ParseError;
+/**
+ * serializeError
+ * - Normalizes various error shapes into a stable plain object for logging/telemetry.
+ * - Use this single exported helper everywhere instead of duplicate implementations.
+ */
+export function serializeError(err) {
+  if (!err) return { message: 'Unknown error' };
 
-// opțional: serializare prietenoasă pentru logger/Allure
-export function serializeError(e) {
-  return {
-    name: e?.name,
-    message: e?.message,
-    status: e?.status,
-    url: e?.url,
-    body: e?.body,
-    cause: e?.cause?.message || undefined,
-    stack: e?.stack,
+  const base = {
+    name: err.name || typeof err === 'string' ? String(err) : 'Error',
+    message: err.message ?? String(err),
   };
+
+  // Common optional properties
+  if (err.url) base.url = err.url;
+  if (err.status !== undefined) base.status = err.status;
+  if (err.timeout !== undefined) base.timeout = err.timeout;
+  if (err.stack) base.stack = err.stack;
+
+  // If the error has a cause (native or custom), include a short representation
+  if (err.cause) {
+    try {
+      const c = err.cause;
+      base.cause = {
+        name: c.name || typeof c,
+        message: c.message ?? String(c)
+      };
+    } catch {
+      base.cause = { message: 'Unable to serialize cause' };
+    }
+  }
+
+  return base;
 }

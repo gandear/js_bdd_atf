@@ -15,27 +15,23 @@ export class LoginPage extends BasePage {
     this.requiredFieldError = '.oxd-input-group__message';
   }
 
-  // Enhanced open with retry logic
-  async open(retries = 3) {
-    let lastError;
-    for (let i = 0; i < retries; i++) {
-      try {
-        this.logger.step(`Navigate to login page (attempt ${i + 1}/${retries})`);
-        await this.page.goto(this.constructor.path, { waitUntil: 'networkidle' });
-        await this.page.waitForSelector(this.usernameField, { timeout: 5000 });
-        this.logger.info('Login page loaded successfully', { url: this.page.url() });
-        return;
-      } catch (e) {
-        lastError = e;
-        this.logger.warn(`Navigation attempt ${i + 1} failed`, { error: e.message });
-        if (i < retries - 1) await this.page.waitForTimeout(1000);
-      }
-    }
-    this.logger.error('Navigation failed after retries', { error: lastError.message });
-    throw lastError;
+  async open() {
+    this.logger.step('Navigate to login page');
+    
+    await this.page.goto(this.constructor.path, { 
+      waitUntil: 'domcontentloaded',
+      timeout: 30000 // default was 10000 ms, but now is set as 30000 ms to avoid timeout issues
+    });
+    
+    await this.page.waitForSelector(this.usernameField, { 
+      state: 'visible',
+      timeout: 5000 
+    });
+    
+    this.logger.info('Login page loaded', { url: this.page.url() });
   }
 
-  async login(username, password) {
+    async login(username, password) {
     this.logger.step(`Login attempt with username: ${username}`);
     
     if (username !== undefined) {
@@ -48,29 +44,57 @@ export class LoginPage extends BasePage {
       this.logger.debug('Password entered');
     }
 
-    // Trigger blur for validations
     await this.page.click(this.usernameField);
     await this.page.click(this.passwordField);
     
     this.logger.action('Submit login form');
     await this.clickElement(this.loginButton);
     
-   await Promise.race([
-     this.page.waitForURL(/dashboard/, { timeout: 5000 }).catch(() => null),
-     this.page.waitForSelector(this.errorBannerContainer, { timeout: 3000 }).catch(() => null)
-   ]);
-
+    // ✅ Wait for result BEFORE returning
+    const result = await this.waitForLoginResult();
+    this.logger.info('Login completed', result);
   }
 
-  // Get error context (banner + field errors)
-  async getErrorMessageContext() {
-    const banner = await this.getBannerErrorText();
-    const required = await this.getRequiredFieldErrors();
-    return { banner, required };
+  async waitForLoginResult() {
+    try {
+      // ✅ Explicit wait for ONE of these outcomes
+      const result = await Promise.race([
+        // Success: dashboard URL
+        this.page.waitForURL(/dashboard/, { timeout: 6000 })
+          .then(() => ({ type: 'success', url: this.page.url() })),
+        
+        // Error: banner visible AND text loaded
+        this.page.waitForSelector(this.errorBannerText, { // ✅ Wait for TEXT, not container
+          state: 'visible', 
+          timeout: 6000 
+        }).then(async () => {
+          const text = await this.page.textContent(this.errorBannerText);
+          return { type: 'error', message: text?.trim() };
+        }),
+        
+        // Validation: required field errors
+        this.page.waitForSelector(this.requiredFieldError, { 
+          state: 'visible', 
+          timeout: 6000 
+        }).then(() => ({ type: 'validation' })),
+      ]);
+      
+      this.logger.info('Login result detected', result);
+      return result;
+      
+    } catch (e) {
+      this.logger.error('Login result timeout', { 
+        error: e.message,
+        url: this.page.url() 
+      });
+      throw new Error(`Login timeout: ${e.message}`);
+    }
   }
 
   async getBannerErrorText() {
-    if (!(await this.isElementVisible(this.errorBannerContainer, 1500))) return '';
+    if (!(await this.isElementVisible(this.errorBannerContainer, 500))) {
+      return '';
+    }
     return (await this.getElementText(this.errorBannerText))?.trim() || '';
   }
 
@@ -78,15 +102,12 @@ export class LoginPage extends BasePage {
     const items = this.page.locator(this.requiredFieldError);
     const count = await items.count();
     const texts = [];
+    
     for (let i = 0; i < count; i++) {
       const t = (await items.nth(i).textContent())?.trim();
       if (t) texts.push(t);
     }
+    
     return texts;
-  }
-
-  async isInvalidCredentialsErrorDisplayed() {
-    const text = await this.getBannerErrorText();
-    return /invalid credentials/i.test(text);
   }
 }

@@ -50,34 +50,33 @@ export const metaSchema = {
 
 /**
  * GET /api/users?page={page}
- * Returns paginated list of users, incluzând support și meta.
+ * Returns paginated list of users, incluzând support.
+ * Aliniat la formatul real (ex: reqres.in) — nu există _meta în răspuns.
  */
 export const usersResponseSchema = {
   type: 'object',
-  required: ['page', 'per_page', 'total', 'total_pages', 'data', 'support', '_meta'],
+  required: ['page', 'per_page', 'total', 'total_pages', 'data', 'support'],
   properties: {
     page: { type: 'integer' },
     per_page: { type: 'integer' },
     total: { type: 'integer' },
     total_pages: { type: 'integer' },
     data: { type: 'array', items: userSchema },
-    support: supportSchema, 
-    _meta: metaSchema 
+    support: supportSchema
   },
   additionalProperties: true
 };
 
 /**
  * GET /api/users/{id}
- * Returns single user details, incluzând support și meta.
+ * Single user response schema (data + support)
  */
 export const singleUserResponseSchema = {
   type: 'object',
-  required: ['data', 'support', '_meta'],
-  properties: { 
+  required: ['data', 'support'],
+  properties: {
     data: userSchema,
-    support: supportSchema, 
-    _meta: metaSchema 
+    support: supportSchema
   },
   additionalProperties: true
 };
@@ -92,14 +91,27 @@ export const singleUserResponseSchema = {
  */
 export const createdUserSchema = {
   type: 'object',
-  required: ['name', 'job', 'id', 'createdAt'],
   properties: {
-    name: { type: 'string', minLength: 1 },
-    job: { type: 'string', minLength: 1 },
-    id: { type: 'string', minLength: 1 },
+    name: { type: 'string', minLength: 0 }, // permis string gol pentru testele negative
+    job:  { type: 'string', minLength: 0 },
+    id:   { type: 'string' },
     createdAt: { type: 'string', format: 'date-time' }
   },
-  additionalProperties: true
+  required: ['id', 'createdAt'],
+  additionalProperties: false
+};
+
+// Variantă strictă (pentru cazuri în care vrem validare non-empty)
+export const createdUserSchemaStrict = {
+  type: 'object',
+  properties: {
+    name: { type: 'string', minLength: 1 },
+    job:  { type: 'string', minLength: 1 },
+    id:   { type: 'string' },
+    createdAt: { type: 'string', format: 'date-time' }
+  },
+  required: ['id', 'createdAt', 'name', 'job'],
+  additionalProperties: false
 };
 
 /**

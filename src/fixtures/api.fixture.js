@@ -8,7 +8,14 @@ export const apiFixtures = {
 
   apiClient: async ({ request }, use, testInfo) => {
     const baseURL = testInfo?.project?.use?.baseURL ?? process.env.API_BASE_URL ?? '';
-    await use(new ApiClient(request, { baseURL }));
+    const requestLib = new ApiClient(request, { baseURL: process.env.API_BASE_URL ?? config.apiBaseUrl });
+    
+    // Dacă există token în env, îl aplicăm automat clientului API
+    if (process.env.API_TOKEN) {
+      requestLib.setAuthToken(process.env.API_TOKEN);
+    }
+
+    await use(requestLib);
   },
 
   testDataManager: async ({ apiClient }, use, testInfo) => {

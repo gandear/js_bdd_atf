@@ -1,4 +1,4 @@
-import { ApiError, TimeoutError, NetworkError } from './errors.js';
+import { ApiError, NetworkError, TimeoutError, serializeError } from './errors.js';
 import { HeadersManager } from '../helpers/headersManager.js';
 
 export class ApiClient {
@@ -41,32 +41,39 @@ export class ApiClient {
     };
 
     if (data !== undefined) {
-      if (!requestOptions.headers['Content-Type']) requestOptions.headers['Content-Type'] = 'application/json';
+      // ensure JSON body + Content-Type header
       requestOptions.data = data;
+      requestOptions.headers = { ...requestOptions.headers, 'Content-Type': 'application/json' };
     }
 
     let res;
     try {
-      res = await this.request[method](path, requestOptions);
+      res = await this.request[method](`${this.baseURL}${path}`, requestOptions);
     } catch (e) {
-      const msg = String(e?.message || '').toLowerCase();
+      const msg = String(e.message || e).toLowerCase();
       if (msg.includes('timeout')) throw new TimeoutError(requestOptions.timeout, { url: path, cause: e });
       if (msg.includes('net') || msg.includes('network')) throw new NetworkError('Network request failed', { url: path, cause: e });
+      // Wrap other transport errors into ApiError and include cause
       throw new ApiError('Request failed', { url: path, cause: e });
     }
 
     let json = null, text = null;
     try {
-      json = await res.json();
+      text = await res.text();
+      json = text ? JSON.parse(text) : null;
     } catch {
-      try { text = await res.text(); } catch { /* ignore */ }
+      // ignore parse errors, keep text if present
     }
 
     const status = res.status();
     const okByPolicy = validateStatus ? validateStatus(status) : res.ok();
 
     if (!okByPolicy && throwOnHttpError) {
-      throw new ApiError(`HTTP ${status}`, { status, url: res.url(), body: json ?? text });
+      // Normalize error payloads using serializeError before throwing
+      const payload = json ?? { status, text };
+      const normalized = serializeError({ name: 'HttpError', message: 'HTTP error', status, url: path, payload });
+      const err = new ApiError(normalized.message, { url: path, status, cause: normalized });
+      throw err;
     }
 
     return { res, json, text };
@@ -78,11 +85,16 @@ export class ApiClient {
   delete(path, headers, opts)       { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
   patch(path, data, headers, opts)  { return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
 
+  // Removed explicit 'Content-Type' headers here — requestWithHandling will add it when data is present
   getUsers(page = 1, opts)          { return this.get(`/api/users`, undefined, { ...(opts || {}), query: { page } }); }
   getUser(id, opts)                 { return this.get(`/api/users/${id}`, undefined, opts); }
-  createUser(user, opts)            { return this.post(`/api/users`, user, { 'Content-Type': 'application/json' }, opts); }
-  updateUser(id, user, opts)        { return this.put(`/api/users/${id}`, user, { 'Content-Type': 'application/json' }, opts); }
+  createUser(user, opts)            { return this.post(`/api/users`, user, undefined, opts); }
+  updateUser(id, user, opts)        { return this.put(`/api/users/${id}`, user, undefined, opts); }
   deleteUser(id, opts)              { return this.delete(`/api/users/${id}`, undefined, opts); }
-  register(credentials, opts)       { return this.post(`/api/register`, credentials, { 'Content-Type': 'application/json' }, opts); }
-  login(credentials, opts)          { return this.post(`/api/login`, credentials, { 'Content-Type': 'application/json' }, opts); }
+  register(credentials, opts)       { return this.post(`/api/register`, credentials, undefined, opts); }
+  login(credentials, opts)          { return this.post(`/api/login`, credentials, undefined, opts); }
+  patchUser(id, user, opts)         { 
+    if (!id) throw new Error('patchUser requires id');
+    return this.patch(`/api/users/${id}`, user, undefined, opts); 
+  }
 }
