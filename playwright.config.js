@@ -2,6 +2,7 @@
 import dotenv from 'dotenv'; dotenv.config({ quiet: true });
 import { defineConfig } from '@playwright/test';
 import { defineBddProject } from 'playwright-bdd';
+import { HeadersManager } from './src/api/helpers/headersManager.js';
 
 const isCI = !!process.env.CI;
 const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
@@ -19,28 +20,25 @@ const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
 const apiToken = (process.env.API_TOKEN || '').trim();
 const scheme = (process.env.API_AUTH_SCHEME || 'api-key').toLowerCase(); // 'api-key' | 'bearer'
 
-// Politica de atașare (exact ca varianta care era "verde"):
+// Build api headers via HeadersManager (centralized)
+const apiHeaders = HeadersManager.merge(
+  { 'Content-Type': 'application/json' },  undefined,
+  { authToken: apiToken, authScheme: scheme, apiKeyHeader }
+);
+
+// Politica de atașare rămâne evaluabilă dacă e nevoie în alte părți
 const disableAuth = String(process.env.API_DISABLE_AUTH || 'false').toLowerCase() === 'true';
 const requireAuth = String(process.env.API_REQUIRE_AUTH || 'false').toLowerCase() === 'true';
 const shouldAttach = !disableAuth && (requireAuth || apiToken.length > 0);
-
-const apiHeaders = {
-  'Content-Type': 'application/json',
-  ...(shouldAttach
-    ? (scheme === 'bearer'
-        ? { Authorization: `Bearer ${apiToken}` }
-        : { [apiKeyHeader]: apiToken })
-    : {})
-};
 
 // Setări UI comune (compact, CI-friendly)
 const uiUse = {
   baseURL,
   locale: 'en-US',
-    extraHTTPHeaders: {
-      'Accept-Language': 'en-US,en;q=0.9'
-    },
-  headless: true,                 
+  extraHTTPHeaders: {
+    'Accept-Language': 'en-US,en;q=0.9'
+  },
+  headless: true,
   trace: 'retain-on-failure',
   screenshot: 'only-on-failure',
   video: 'off'
@@ -84,6 +82,7 @@ export default defineConfig({
       }),
       metadata: { suite: 'API' },
       retries: 0,
+      workers: 1,
       use: {
         baseURL: apiBaseURL,
         extraHTTPHeaders: apiHeaders,

@@ -1,68 +1,64 @@
 // src/utils/logger.js
 import pino from 'pino';
 import { join } from 'path';
-import { existsSync, mkdirSync } from 'fs';
-import sanitizeSegment from './sanitize.js';
-import getRunStamp from './run-stamp.js';
+import { mkdirSync } from 'fs';
 
-// Simplificat la o funcție săgeată
-const ensureDir = (d) => {
-  if (!existsSync(d)) mkdirSync(d, { recursive: true });
-};
+export default function createLogger(opts = {}) {
+  const level = process.env.LOG_LEVEL || opts.level || 'info';
 
-export default function createLogger(ctx = {}) {
-  const { RUN_DATE, RUN_TIME } = getRunStamp();
+  const RUN_DATE = process.env.RUN_DATE ?? new Date().toISOString().split('T')[0];
+  const RUN_TIME = process.env.RUN_TIME ?? new Date().toISOString().replace(/[:.]/g, '-');
 
-  const project = sanitizeSegment(ctx.project || 'project');
-  const browser = ctx.browser ? sanitizeSegment(ctx.browser) : 'api';
-  const testName = sanitizeSegment(ctx.testName || 'test');
+  const logsDir = opts.logsDir ?? join(process.cwd(), 'logs');
+  try {
+    mkdirSync(logsDir, { recursive: true });
+  } catch (e) {
+    // ignore
+  }
 
-  // Construim path-ul robust și fără duplicate consecutive
-  const segments = ['logs', RUN_DATE, RUN_TIME, browser, project].filter(Boolean);
-  
-  // Am păstrat deduplicarea pentru a menține robustețea căii.
-  const deduped = segments.filter((seg, i, arr) => i === 0 || seg !== arr[i - 1]);
-  const destDir = join(process.cwd(), ...deduped);
-  ensureDir(destDir);
+  const filename = join(logsDir, `${RUN_DATE}_${RUN_TIME}.log`);
+  const dest = pino.destination({ dest: filename, sync: false });
+  const baseLogger = pino({ level }, dest);
 
-  const filePath = join(destDir, `${testName}.log`);
-  const level = String(ctx.level || process.env.LOG_LEVEL || 'info').toLowerCase();
+  // Wrapper that exposes convenience methods used by fixtures/steps
+  const wrapper = {
+    raw: baseLogger,
+    info: (msg, meta) => baseLogger.info(meta ?? {}, String(msg)),
+    warn: (msg, meta) => baseLogger.warn(meta ?? {}, String(msg)),
+    error: (msg, meta) => baseLogger.error(meta ?? {}, String(msg)),
+    debug: (msg, meta) => baseLogger.debug(meta ?? {}, String(msg)),
+    action: (msg, meta) => baseLogger.info(meta ?? {}, `ACTION: ${msg}`),
+    step: (msg, meta) => baseLogger.info(meta ?? {}, `STEP: ${msg}`),
+    scenario: (msg, meta) => baseLogger.info(meta ?? {}, `SCENARIO: ${msg}`),
 
-  const destination = pino.destination({ dest: filePath, sync: false });
-  const logger = pino(
-    {
-      level,
-      timestamp: pino.stdTimeFunctions.isoTime,
-      redact: { paths: ['token', 'authorization', 'Authorization', 'req.headers.authorization'], censor: '***' },
-      formatters: { level: (label) => ({ level: label.toUpperCase() }) },
-      base: {
-        project,
-        browser,
-        testName,
-        test_file: ctx.test_file || null,
-      },
-    },
-    destination
-  );
-
-  const enhancedLogger = {
-    // Metode standard cu suport pentru obiectul 'extra'
-    debug: (msg, extra) => logger.debug({ ...(extra || {}) }, msg),
-    info:  (msg, extra) => logger.info({ ...(extra || {}) }, msg),
-    warn:  (msg, extra) => logger.warn({ ...(extra || {}) }, msg),
-    error: (msg, extra) => logger.error({ ...(extra || {}) }, msg),
-
-    // BDD sugar
-    step(stepName, extra = {})    { return logger.info({ step: true, ...extra }, `STEP: ${stepName}`); },
-    scenario(scnMsg, extra = {})  { return logger.info({ scenario: true, ...extra }, `SCENARIO: ${scnMsg}`); },
-    action(actionMsg, extra = {})  { return logger.info({ action: true, ...extra }, actionMsg); },
-
-    filePath,
-    flush: () =>
-      new Promise((resolve) =>
-        destination.flush ? destination.flush(resolve) : resolve()
-      ),
+    // Ensure tests can await logger.flush(); try multiple available flush APIs, noop if none.
+    flush: async () => {
+      try {
+        if (typeof baseLogger.flush === 'function') {
+          // pino v7 may expose flush on logger
+          baseLogger.flush();
+          return;
+        }
+        if (dest && typeof dest.flushSync === 'function') {
+          dest.flushSync();
+          return;
+        }
+        if (dest && typeof dest.flush === 'function') {
+          await new Promise((resolve, reject) => {
+            try {
+              dest.flush((err) => (err ? reject(err) : resolve()));
+            } catch (e) {
+              // Some streams' flush may throw; ignore
+              resolve();
+            }
+          });
+          return;
+        }
+      } catch (e) {
+        // swallow errors to avoid failing tests because of logging flush
+      }
+    }
   };
 
-  return enhancedLogger;
+  return wrapper;
 }
