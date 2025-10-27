@@ -1,7 +1,7 @@
 // ./src/setup/global-setup.js
 
 import { getRunStamp } from '../utils/run-stamp.js';
-import * as ConfigValidator from '../config/configValidator.js';
+import { ConfigValidator } from '../config/configValidator.js';
 import createLogger from '../utils/logger.js';
 import { join } from 'path';
 import { writeFileSync } from 'fs';
