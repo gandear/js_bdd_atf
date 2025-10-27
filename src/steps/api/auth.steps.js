@@ -8,13 +8,11 @@ const { When, Then } = createBdd(test);
 
 /* -------- REGISTER -------- */
 When('I register a user with email {string} and password {string}', async ({ apiClient, testState, logger }, email, password) => {
-  await test.step('POST /api/register', async () => {
     const payload = { email, password };
     logger.step('POST /api/register', { payload: redactAuth(payload) });
     const { res, json, text } = await apiClient.register(payload, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
-  });
 });
 
 Then('the response contains a user ID', async ({ testState, logger }) => {
@@ -35,22 +33,22 @@ Then('the response contains the error message {string}', async ({ testState, log
 
 /* -------- LOGIN -------- */
 When('I log in with email {string} and password {string}', async ({ apiClient, testState, logger }, email, password) => {
-  await test.step('POST /api/login', async () => {
     const payload = { email, password };
     logger.step('POST /api/login', { payload: redactAuth(payload) });
     const { res, json, text } = await apiClient.login(payload, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
-  });
 });
 
 /* -------- GENERIC HTTP ASSERTIONS (reused by both REGISTER/LOGIN) -------- */
 Then('the HTTP response is {int}', async ({ testState, logger }, status) => {
+  logger.debug?.('testState.res before assertion', { res: testState.res });
   expect(testState.res.status()).toBe(status);
   logger.action('Assert HTTP status exact', { expected: status, actual: testState.res.status() });
 });
 
-Then('the HTTP response is {int} \\({string}\\)', async ({ testState, logger }, status, _label) => {
+Then('the HTTP response is {int} labeled {string}', async ({ testState, logger }, status, _label) => {
+  logger.debug?.('testState.res before assertion', { res: testState.res });
   expect(testState.res.status()).toBe(status);
   logger.action('Assert HTTP status exact (labeled)', { expected: status, label: _label });
 });

@@ -20,12 +20,6 @@ const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
 const apiToken = (process.env.API_TOKEN || '').trim();
 const scheme = (process.env.API_AUTH_SCHEME || 'api-key').toLowerCase(); // 'api-key' | 'bearer'
 
-// Build api headers via HeadersManager (centralized)
-const apiHeaders = HeadersManager.merge(
-  { 'Content-Type': 'application/json' },  undefined,
-  { authToken: apiToken, authScheme: scheme, apiKeyHeader }
-);
-
 // Politica de atașare rămâne evaluabilă dacă e nevoie în alte părți
 const disableAuth = String(process.env.API_DISABLE_AUTH || 'false').toLowerCase() === 'true';
 const requireAuth = String(process.env.API_REQUIRE_AUTH || 'false').toLowerCase() === 'true';
@@ -85,7 +79,6 @@ export default defineConfig({
       workers: 1,
       use: {
         baseURL: apiBaseURL,
-        extraHTTPHeaders: apiHeaders,
         trace: 'off',
         screenshot: 'off',
         video: 'off'

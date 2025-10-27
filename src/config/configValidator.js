@@ -1,3 +1,5 @@
+import createLogger from '../utils/logger.js';
+
 export class ConfigValidator {
   static ALLOWED_CONFIG = {
     BASE_URL: [
@@ -27,7 +29,9 @@ export class ConfigValidator {
       }
     });
 
-    console.log('✅ Configuration validated successfully');
+    // Use project logger for consistent output
+    const logger = createLogger();
+    logger.info('✅ Configuration validated successfully');
     return true;
   }
 }

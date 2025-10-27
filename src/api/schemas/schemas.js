@@ -161,5 +161,5 @@ export const errorResponseSchema = {
   properties: { 
     error: { type: 'string', minLength: 1 } 
   },
-  additionalProperties: true
+  additionalProperties: false
 };

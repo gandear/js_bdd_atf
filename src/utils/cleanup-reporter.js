@@ -1,6 +1,9 @@
 // src/utils/cleanup-reporter.js
 import fs from 'fs/promises';
 import path from 'path';
+import createLogger from './logger.js';
+
+const logger = createLogger();
 
 class CleanupReporter {
   constructor(options = {}) {
@@ -11,17 +14,17 @@ class CleanupReporter {
   async onEnd(result) {
     // Handle case when no tests are found
     if (!result || typeof result !== 'object') {
-      console.log(`\n🧹 Cleanup Reporter: No test results found`);
+      logger.info('\n🧹 Cleanup Reporter: No test results found');
       return;
     }
 
     const { status, passed = 0, failed = 0 } = result;
     
-    console.log(`\n🧹 Cleanup Reporter: Tests completed with ${passed} passed, ${failed} failed`);
+    logger.info(`\n🧹 Cleanup Reporter: Tests completed with ${passed} passed, ${failed} failed`);
 
     // Skip cleanup if no tests were executed
     if (passed === 0 && failed === 0) {
-      console.log('ℹ️  No tests executed, skipping cleanup');
+      logger.info('ℹ️  No tests executed, skipping cleanup');
       return;
     }
 
@@ -44,9 +47,9 @@ class CleanupReporter {
       // Check if directory is empty or contains only minimal files
       const isEmpty = await this.isDirectoryMinimal(testResultsPath);
       
-      if (isEmpty) {
+        if (isEmpty) {
         await fs.rm(testResultsPath, { recursive: true, force: true });
-        console.log('✅ Cleaned up empty test-results folder');
+        logger.info('✅ Cleaned up empty test-results folder');
       } else {
         // Cleanup only API test results if they're empty (no failures)
         await this.cleanupApiResults();
@@ -64,9 +67,9 @@ class CleanupReporter {
       if (!exists) return;
 
       const isEmpty = await this.isDirectoryMinimal(apiResultsPath);
-      if (isEmpty) {
+        if (isEmpty) {
         await fs.rm(apiResultsPath, { recursive: true, force: true });
-        console.log('✅ Cleaned up API test-results (no failures)');
+        logger.info('✅ Cleaned up API test-results (no failures)');
       }
     } catch (error) {
       console.warn(`⚠️  Could not cleanup API results: ${error.message}`);
@@ -109,7 +112,7 @@ class CleanupReporter {
     }
 
     if (cleanedCount > 0) {
-      console.log(`🗑️  Cleaned ${cleanedCount} old items from ${folderPath}`);
+  logger.info(`🗑️  Cleaned ${cleanedCount} old items from ${folderPath}`);
     }
   }
 

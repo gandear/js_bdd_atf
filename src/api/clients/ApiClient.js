@@ -1,26 +1,36 @@
+// src/api/clients/ApiClient.js
 import { ApiError, NetworkError, TimeoutError, serializeError } from './errors.js';
 import { HeadersManager } from '../helpers/headersManager.js';
 
 export class ApiClient {
 
-  constructor(request, { defaultHeaders = {}, defaultTimeoutMs = 10_000, baseURL, authScheme = 'bearer', apiKeyHeader = 'x-api-key' } = {}) {
+  constructor(request, { 
+    defaultHeaders = {}, 
+    defaultTimeoutMs = 10_000, 
+    baseURL = '', 
+    authToken = null,           
+    authScheme = 'bearer', 
+    apiKeyHeader = 'x-api-key', 
+    logger = null 
+  } = {}) {
     this.request = request;
-    this.baseURL = baseURL;
-    this.authToken = null;
+    this.baseURL = baseURL.replace(/\/$/, '');
+    this.authToken = authToken;  // ✅ Inițializează direct din constructor
     this.defaultHeaders = defaultHeaders;
-    this.defaultTimeoutMs = defaultTimeoutMs;
+    this.defaultTimeoutMs = (process.env.API_TIMEOUT_MS ? parseInt(process.env.API_TIMEOUT_MS, 10) : defaultTimeoutMs);
     this.authScheme = authScheme;
     this.apiKeyHeader = apiKeyHeader;
+    this.logger = logger || console;
+    
+    const envRetries = process.env.API_MAX_RETRIES ?? process.env.API_RETRY_COUNT;
+    this.maxRetries = envRetries ? parseInt(envRetries, 10) : 3;
+
+    const envBaseBackoff = process.env.API_BASE_BACKOFF_MS ?? process.env.API_BACKOFF_MS;
+    this.defaultBaseBackoffMs = envBaseBackoff ? parseInt(envBaseBackoff, 10) : 100;
   }
 
-  setAuthToken(token) {
-    this.authToken = token;
-  }
-
-  async loginAndSetToken(credentials) {
-    const { res, json } = await this.login(credentials);
-    if (res.status() === 200 && json?.token) this.setAuthToken(json.token);
-    return { res, json };
+  setAuthToken(token) { 
+    this.authToken = token; 
   }
 
   mergeHeaders(headers) {
@@ -41,7 +51,6 @@ export class ApiClient {
     };
 
     if (data !== undefined) {
-      // ensure JSON body + Content-Type header
       requestOptions.data = data;
       requestOptions.headers = { ...requestOptions.headers, 'Content-Type': 'application/json' };
     }
@@ -53,7 +62,6 @@ export class ApiClient {
       const msg = String(e.message || e).toLowerCase();
       if (msg.includes('timeout')) throw new TimeoutError(requestOptions.timeout, { url: path, cause: e });
       if (msg.includes('net') || msg.includes('network')) throw new NetworkError('Network request failed', { url: path, cause: e });
-      // Wrap other transport errors into ApiError and include cause
       throw new ApiError('Request failed', { url: path, cause: e });
     }
 
@@ -62,14 +70,13 @@ export class ApiClient {
       text = await res.text();
       json = text ? JSON.parse(text) : null;
     } catch {
-      // ignore parse errors, keep text if present
+      // ignore parse errors
     }
 
     const status = res.status();
     const okByPolicy = validateStatus ? validateStatus(status) : res.ok();
 
     if (!okByPolicy && throwOnHttpError) {
-      // Normalize error payloads using serializeError before throwing
       const payload = json ?? { status, text };
       const normalized = serializeError({ name: 'HttpError', message: 'HTTP error', status, url: path, payload });
       const err = new ApiError(normalized.message, { url: path, status, cause: normalized });
@@ -85,7 +92,6 @@ export class ApiClient {
   delete(path, headers, opts)       { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
   patch(path, data, headers, opts)  { return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
 
-  // Removed explicit 'Content-Type' headers here — requestWithHandling will add it when data is present
   getUsers(page = 1, opts)          { return this.get(`/api/users`, undefined, { ...(opts || {}), query: { page } }); }
   getUser(id, opts)                 { return this.get(`/api/users/${id}`, undefined, opts); }
   createUser(user, opts)            { return this.post(`/api/users`, user, undefined, opts); }

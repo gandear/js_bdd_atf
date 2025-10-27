@@ -60,13 +60,12 @@ Given('I have prepared data for a new user with name {string} and job {string}',
 });
 
 When('I send the create user request', async ({ testDataManager, testState, logger }) => {
-  await test.step('POST /api/users', async () => {
+
     const payload = testState.createPayload ?? { name: `User ${Date.now()}`, job: 'Tester' };
     const { res, json, text } = await testDataManager.createTestUser(payload); 
 
     logger.info('HTTP response (final)', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
-});
 });
 
 Then('the response contains the name {string} and job {string}', async ({ testState }, name, job) => {
@@ -111,12 +110,10 @@ Then('I can verify that user {string} was created with job {string}', async ({ t
 
 /* negative create */
 When('I send the create user request with name {string} and job {string}', async ({ apiClient, testState, logger }, name, job) => {
-  await test.step('POST /api/users (negative)', async () => {
     const payload = { name: name || '', job: job || '' };
     const { res, json, text } = await apiClient.createUser(payload, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
-  });
 });
 
 /* ---------- UPDATE (PUT/PATCH) ---------- */
@@ -133,22 +130,18 @@ Given('I want to update user {string} with only the job {string}', async ({ test
 });
 
 When('I send a PUT request for user {string}', async ({ apiClient, testState, logger }, id) => {
-  await test.step(`PUT /api/users/${id}`, async () => {
     const payload = testState.updatePayload ?? { name: `Updated ${Date.now()}`, job: 'QA Lead' };
     const { res, json, text } = await apiClient.updateUser(id, payload, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
-  });
 });
 
 When('I send a PATCH request for user {string}', async ({ apiClient, testState, logger }, id) => {
-  await test.step(`PATCH /api/users/${id}`, async () => {
     const payload = testState.updatePayload ?? { job: 'Zion Resident' };
     const { res, json, text } = await apiClient.patchUser?.(id, payload, { throwOnHttpError: false })
       ?? await apiClient.updateUser(id, payload, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
-  });
 });
 
 /* Soft checks pentru UPDATE – reqres trimite, de regulă, doar updatedAt */
@@ -169,12 +162,10 @@ Then('the response contains an update timestamp', async ({ testState }) => {
 
 /* ---------- DELETE ---------- */
 When('I send a delete request for user {string}', async ({ apiClient, testState, logger }, id) => {
-  await test.step(`DELETE /api/users/${id}`, async () => {
     const { res, json, text } = await apiClient.deleteUser(id, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
     testState.lastDeletedId = id;
-  });
 });
 
 Then('the response has no content', async ({ testState }) => {
