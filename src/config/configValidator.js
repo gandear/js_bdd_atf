@@ -1,3 +1,4 @@
+// src/config/configValidator.js
 import createLogger from '../utils/logger.js';
 
 export class ConfigValidator {
@@ -12,25 +13,34 @@ export class ConfigValidator {
     ]
   };
 
-  static REQUIRED = ['BASE_URL', 'API_BASE_URL', 'API_KEY_HEADER', 'API_TOKEN'];
+  // ✅ API_TOKEN este opțional (reqres.in nu necesită auth pentru /register, /login)
+  static REQUIRED = ['BASE_URL', 'API_BASE_URL', 'API_KEY_HEADER'];
+  static OPTIONAL = ['API_TOKEN']; // ✅ Moved from REQUIRED
 
   static validate() {
-    const config = Object.fromEntries(this.REQUIRED.map(k => [k, process.env[k]]));
+    const allKeys = [...this.REQUIRED, ...this.OPTIONAL];
+    const config = Object.fromEntries(allKeys.map(k => [k, process.env[k]]));
     
-    // Verifică lipsă
-    const missing = Object.entries(config).filter(([_, v]) => !v?.trim()).map(([k]) => k);
-    if (missing.length) throw new Error(`Missing required config: ${missing.join(', ')}`);
+    // ✅ Verifică doar câmpurile REQUIRED
+    const missing = this.REQUIRED.filter(k => !config[k]?.trim());
+    if (missing.length) {
+      throw new Error(`Missing required config: ${missing.join(', ')}`);
+    }
 
-    // Validează URL-uri din whitelist
+    // ✅ Validează URL-uri din whitelist
     Object.entries(this.ALLOWED_CONFIG).forEach(([field, allowedUrls]) => {
       const value = config[field];
-      if (!allowedUrls.includes(value)) {
+      if (value && !allowedUrls.includes(value)) {
         throw new Error(`Invalid ${field}: "${value}". Allowed: ${allowedUrls.join(', ')}`);
       }
     });
 
-    // Use project logger for consistent output
+    // ✅ Log warning dacă API_TOKEN lipsește (dar nu eșuează)
     const logger = createLogger();
+    if (!config.API_TOKEN?.trim()) {
+      logger.warn('⚠️  API_TOKEN not set - auth will be skipped for all requests');
+    }
+
     logger.info('✅ Configuration validated successfully');
     return true;
   }

@@ -15,7 +15,7 @@ export class ApiClient {
   } = {}) {
     this.request = request;
     this.baseURL = baseURL.replace(/\/$/, '');
-    this.authToken = authToken;  // ✅ Inițializează direct din constructor
+    this.authToken = authToken;
     this.defaultHeaders = defaultHeaders;
     this.defaultTimeoutMs = (process.env.API_TIMEOUT_MS ? parseInt(process.env.API_TIMEOUT_MS, 10) : defaultTimeoutMs);
     this.authScheme = authScheme;
@@ -33,12 +33,39 @@ export class ApiClient {
     this.authToken = token; 
   }
 
-  mergeHeaders(headers) {
-    return HeadersManager.merge(this.defaultHeaders, headers, {
-      authToken: this.authToken,
+  mergeHeaders(headers = {}) {
+    // ✅ Detectează dacă trebuie să skip auth
+    const skipAuth = headers?.['x-skip-auth'] === true;
+    
+    // Cleanup internal flag
+    const cleanHeaders = { ...headers };
+    delete cleanHeaders['x-skip-auth'];
+    
+    // ✅ DEBUG: Log auth decision
+    if (this.logger?.debug) {
+      this.logger.debug('Auth decision', { 
+        skipAuth, 
+        hasToken: !!this.authToken,
+        authScheme: this.authScheme,
+        headers: Object.keys(cleanHeaders)
+      });
+    }
+    
+    const merged = HeadersManager.merge(this.defaultHeaders, cleanHeaders, {
+      authToken: skipAuth ? null : this.authToken,
       authScheme: this.authScheme,
       apiKeyHeader: this.apiKeyHeader
     });
+    
+    // ✅ DEBUG: Log final headers (redacted)
+    if (this.logger?.debug) {
+      const safeHeaders = { ...merged };
+      if (safeHeaders.Authorization) safeHeaders.Authorization = '[REDACTED]';
+      if (safeHeaders[this.apiKeyHeader]) safeHeaders[this.apiKeyHeader] = '[REDACTED]';
+      this.logger.debug('Final headers', safeHeaders);
+    }
+    
+    return merged;
   }
 
   async requestWithHandling(method, path, options = {}) {
@@ -92,15 +119,23 @@ export class ApiClient {
   delete(path, headers, opts)       { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
   patch(path, data, headers, opts)  { return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
 
+  // ✅ CRUD endpoints (with auth)
   getUsers(page = 1, opts)          { return this.get(`/api/users`, undefined, { ...(opts || {}), query: { page } }); }
   getUser(id, opts)                 { return this.get(`/api/users/${id}`, undefined, opts); }
   createUser(user, opts)            { return this.post(`/api/users`, user, undefined, opts); }
   updateUser(id, user, opts)        { return this.put(`/api/users/${id}`, user, undefined, opts); }
   deleteUser(id, opts)              { return this.delete(`/api/users/${id}`, undefined, opts); }
-  register(credentials, opts)       { return this.post(`/api/register`, credentials, undefined, opts); }
-  login(credentials, opts)          { return this.post(`/api/login`, credentials, undefined, opts); }
   patchUser(id, user, opts)         { 
     if (!id) throw new Error('patchUser requires id');
     return this.patch(`/api/users/${id}`, user, undefined, opts); 
+  }
+
+  // ✅ AUTH endpoints (NO auth required - public endpoints)
+  register(credentials, opts) { 
+    return this.post(`/api/register`, credentials, { 'x-skip-auth': true }, opts); 
+  }
+  
+  login(credentials, opts) { 
+    return this.post(`/api/login`, credentials, { 'x-skip-auth': true }, opts); 
   }
 }
