@@ -17,11 +17,15 @@ Given(
   'a user with name {string} and job {string} is created',
   async function ({ api }, name, job) {
     
-    // NOU: Apelăm metoda robustă din dataManager
+    // Simplificare: Apelăm metoda robustă din dataManager
     const payload = { name, job };
     const { id } = await api.dataManager.createTestUser(payload);
     
-    // Salvăm ID-ul pentru a fi folosit de scenariul UPDATE
+    if (!id) {
+        throw new Error("Failed to create user for testing: ID not returned.");
+    }
+    
+    // Salvăm ID-ul pentru a fi folosit de pasul 'When I update...'
     api.client.setLastCreatedUserId(id); 
   },
 );
