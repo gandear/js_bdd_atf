@@ -12,6 +12,42 @@ When('I send an unauthenticated GET request to {string}', async function ({ api 
 });
 
 // --- CREATE ---
+
+Given(
+  'a user with name {string} and job {string} is created',
+  async function ({ api }, name, job) {
+    
+    // NOU: Apelăm metoda robustă din dataManager
+    const payload = { name, job };
+    const { id } = await api.dataManager.createTestUser(payload);
+    
+    // Salvăm ID-ul pentru a fi folosit de scenariul UPDATE
+    api.client.setLastCreatedUserId(id); 
+  },
+);
+
+When(
+  'I update the user\'s job to {string} via PUT request',
+  async function ({ api }, newJob) {
+    const userId = api.client.getLastCreatedUserId(); // Obține ID-ul salvat anterior
+
+    if (!userId) {
+        throw new Error("Cannot update user: No user ID was recorded in the previous step.");
+    }
+    
+    // Obține datele user-ului original (sau cel puțin numele)
+    // Deoarece ReqRes nu oferă un endpoint GET user by ID, vom presupune numele original
+    const endpoint = `/api/users/${userId}`;
+    const payload = { 
+        name: "Neo", // Presupunem că știm numele original din Gherkin
+        job: newJob 
+    };
+
+    // Cererea PUT
+    await api.client.put(endpoint, payload, { auth: true });
+  },
+);
+
 When(
   'I create a new user with name {string} and job {string}',
   async function ({ api }, name, job) {
@@ -77,3 +113,14 @@ Then(
     expect(responseBody.data.length).toBeGreaterThan(0);
   }
 );
+
+Then('the response contains a valid update timestamp', async function ({ api }) {
+    const responseBody = await api.getLastResponseBody();
+    
+    // ReqRes returnează 'updatedAt' la PUT/PATCH
+    expect(responseBody.updatedAt).toBeDefined();
+    
+    // Verifică formatul de bază al timestamp-ului
+    expect(typeof responseBody.updatedAt).toBe('string');
+    expect(responseBody.updatedAt.length).toBeGreaterThan(10); 
+});

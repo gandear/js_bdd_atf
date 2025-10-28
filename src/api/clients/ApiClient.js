@@ -9,6 +9,7 @@ export class ApiClient {
     this.lastResponse = null;
     this.baseURL = options.baseURL;
     this.logger = options.logger;
+    this.lastCreatedUserId = null;
   }
 
   // Metodă generică pentru a efectua o cerere.
@@ -39,9 +40,14 @@ export class ApiClient {
     return this.request('post', path, { ...options, data });
   }
 
- delete(endpoint, options = {}) {
+ async delete(endpoint, options = {}) {
     return this.request('delete', endpoint, options); 
   }
+
+  // Metoda PUT
+async put(endpoint, data, options = {}) {
+    return this.request('put', endpoint, { data, ...options });
+}
 
   // Trebuie să adaugi această metodă, necesară pentru a obține răspunsul în steps
   getLastResponse() {
@@ -50,5 +56,16 @@ export class ApiClient {
     }
     return this.lastResponse;
   }
+
+  // Metodă de stocare a ID-ului
+setLastCreatedUserId(id) {
+    this.lastCreatedUserId = id;
+}
+
+// Metodă de obținere a ID-ului
+getLastCreatedUserId() {
+    return this.lastCreatedUserId;
+}
+
 
 }     

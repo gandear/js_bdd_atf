@@ -29,3 +29,12 @@ Feature: User Management (API)
     When I send an authenticated DELETE request to "/api/users/2"
     Then the HTTP response is 204
     And the response has no content
+
+  # ---- UPDATE (Securizat logic) ----
+  @write @update @positive @secure
+  Scenario: Update an existing user (PUT)
+    Given a user with name "Neo" and job "The One" is created
+    When I update the user's job to "Architect" via PUT request
+    Then the HTTP response is 200
+    And the response contains the name "Neo" and job "Architect"
+    And the response contains a valid update timestamp

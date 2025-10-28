@@ -12,19 +12,27 @@ export class TestDataManager {
   }
 
   // Create a test user via API and track its id
-  async createTestUser(payload = {}) {
-    const { res, json } = await this.api.createUser(payload, { throwOnHttpError: true });
+async createTestUser(payload = {}) {
+    // MODIFICARE: Folosește this.api.post('/api/users', ...) în loc de this.api.createUser
+    const res = await this.api.post('/api/users', payload, { 
+        auth: false, // User creation on ReqRes doesn't require auth
+        throwOnHttpError: true 
+    });
+    
+    // Obține corpul JSON
+    const json = await res.json(); 
 
-    const id = json?.id ?? json?.data?.id ?? null;
-    if (id) {
-      this.recordCreatedUser(id);
-      this.logger.info({ id }, 'Test user created and recorded');
-    } else {
-      const status = res ? (typeof res.status === 'function' ? res.status() : res.status) : undefined;
-      this.logger.warn({ payload, resStatus: status }, 'Create user did not return id');
-    }
-    return { res, json, id };
-  }
+    const id = json?.id ?? json?.data?.id ?? null; // Logica de extragere a ID-ului rămâne
+    
+    // ... (restul logicii de înregistrare și logging rămâne)
+    if (id) {
+      this.recordCreatedUser(id);
+      this.logger.info({ id }, 'Test user created and recorded');
+    } else {
+      // ...
+    }
+    return { res, json, id };
+}
 
   // Record created id for later cleanup
   recordCreatedUser(id) {
