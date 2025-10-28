@@ -12,12 +12,10 @@ const { Given, When, Then } = createBdd(test);
 
 /* ---------- LIST ---------- */
 When('I request the user list for page {int}', async ({ apiClient, testState, logger }, page) => {
-  await test.step(`GET /api/users?page=${page}`, async () => {
     logger.step('GET /api/users', { page });
     const { res, json, text } = await apiClient.getUsers(page, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
-  });
 });
 
 Then('the response contains correct pagination metadata for page {int}', async ({ testState, logger }, page) => {
@@ -60,7 +58,6 @@ Given('I have prepared data for a new user with name {string} and job {string}',
 });
 
 When('I send the create user request', async ({ testDataManager, testState, logger }) => {
-
     const payload = testState.createPayload ?? { name: `User ${Date.now()}`, job: 'Tester' };
     const { res, json, text } = await testDataManager.createTestUser(payload); 
 
@@ -88,12 +85,10 @@ When('I send a create request for the following users:', async ({ apiClient, tes
   testState.bulkCreated = [];
 
   for (const row of rows) {
-    await test.step(`POST /api/users (${row.name})`, async () => {
       const payload = { name: String(row.name).trim(), job: String(row.job).trim() };
       const { res, json, text } = await apiClient.createUser(payload, { throwOnHttpError: false });
       logger.info('HTTP response', httpSummary(res, json ?? text));
       testState.bulkCreated.push({ res, json, payload });
-    });
   }
 });
 
@@ -110,10 +105,12 @@ Then('I can verify that user {string} was created with job {string}', async ({ t
 
 /* negative create */
 When('I send the create user request with name {string} and job {string}', async ({ apiClient, testState, logger }, name, job) => {
+  await test.step('POST /api/users (negative)', async () => {
     const payload = { name: name || '', job: job || '' };
     const { res, json, text } = await apiClient.createUser(payload, { throwOnHttpError: false });
     logger.info('HTTP response', httpSummary(res, json ?? text));
     testState.res = res; testState.json = json; testState.text = text;
+  });
 });
 
 /* ---------- UPDATE (PUT/PATCH) ---------- */
