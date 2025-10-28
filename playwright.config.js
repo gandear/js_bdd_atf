@@ -2,7 +2,6 @@
 import dotenv from 'dotenv'; dotenv.config({ quiet: true });
 import { defineConfig } from '@playwright/test';
 import { defineBddProject } from 'playwright-bdd';
-import { HeadersManager } from './src/api/helpers/headersManager.js';
 
 const isCI = !!process.env.CI;
 const steps = ['src/steps/**/*.js', 'src/fixtures/index.js'];
@@ -16,14 +15,6 @@ const baseURL = process.env.BASE_URL || 'https://opensource-demo.orangehrmlive.c
 
 // --- API config ---
 const apiBaseURL = (process.env.API_BASE_URL || 'https://reqres.in').replace(/\/$/, '');
-const apiKeyHeader = process.env.API_KEY_HEADER || 'x-api-key';
-const apiToken = (process.env.API_TOKEN || '').trim();
-const scheme = (process.env.API_AUTH_SCHEME || 'api-key').toLowerCase(); // 'api-key' | 'bearer'
-
-// Politica de atașare rămâne evaluabilă dacă e nevoie în alte părți
-const disableAuth = String(process.env.API_DISABLE_AUTH || 'false').toLowerCase() === 'true';
-const requireAuth = String(process.env.API_REQUIRE_AUTH || 'false').toLowerCase() === 'true';
-const shouldAttach = !disableAuth && (requireAuth || apiToken.length > 0);
 
 // Setări UI comune (compact, CI-friendly)
 const uiUse = {

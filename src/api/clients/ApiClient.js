@@ -1,6 +1,5 @@
 // src/api/clients/ApiClient.js
 import { ApiError, NetworkError, TimeoutError, serializeError } from './errors.js';
-import { HeadersManager } from '../helpers/headersManager.js';
 
 export class ApiClient {
 
@@ -8,18 +7,12 @@ export class ApiClient {
     defaultHeaders = {}, 
     defaultTimeoutMs = 10_000, 
     baseURL = '', 
-    authToken = null,           
-    authScheme = 'bearer', 
-    apiKeyHeader = 'x-api-key', 
     logger = null 
   } = {}) {
     this.request = request;
     this.baseURL = baseURL.replace(/\/$/, '');
-    this.authToken = authToken;
     this.defaultHeaders = defaultHeaders;
     this.defaultTimeoutMs = (process.env.API_TIMEOUT_MS ? parseInt(process.env.API_TIMEOUT_MS, 10) : defaultTimeoutMs);
-    this.authScheme = authScheme;
-    this.apiKeyHeader = apiKeyHeader;
     this.logger = logger || console;
     
     const envRetries = process.env.API_MAX_RETRIES ?? process.env.API_RETRY_COUNT;
@@ -29,57 +22,18 @@ export class ApiClient {
     this.defaultBaseBackoffMs = envBaseBackoff ? parseInt(envBaseBackoff, 10) : 100;
   }
 
-  setAuthToken(token) { 
-    this.authToken = token; 
-  }
-
-  mergeHeaders(headers = {}) {
-    // ✅ Detectează dacă trebuie să skip auth
-    const skipAuth = headers?.['x-skip-auth'] === true;
-    
-    // Cleanup internal flag
-    const cleanHeaders = { ...headers };
-    delete cleanHeaders['x-skip-auth'];
-    
-    // ✅ DEBUG: Log auth decision
-    if (this.logger?.debug) {
-      this.logger.debug('Auth decision', { 
-        skipAuth, 
-        hasToken: !!this.authToken,
-        authScheme: this.authScheme,
-        headers: Object.keys(cleanHeaders)
-      });
-    }
-    
-    const merged = HeadersManager.merge(this.defaultHeaders, cleanHeaders, {
-      authToken: skipAuth ? null : this.authToken,
-      authScheme: this.authScheme,
-      apiKeyHeader: this.apiKeyHeader
-    });
-    
-    // ✅ DEBUG: Log final headers (redacted)
-    if (this.logger?.debug) {
-      const safeHeaders = { ...merged };
-      if (safeHeaders.Authorization) safeHeaders.Authorization = '[REDACTED]';
-      if (safeHeaders[this.apiKeyHeader]) safeHeaders[this.apiKeyHeader] = '[REDACTED]';
-      this.logger.debug('Final headers', safeHeaders);
-    }
-    
-    return merged;
-  }
-
   async requestWithHandling(method, path, options = {}) {
     const { data, headers, timeoutMs, query, throwOnHttpError = true, validateStatus } = options;
 
     const requestOptions = {
-      headers: this.mergeHeaders(headers),
+      headers: { ...this.defaultHeaders, ...(headers || {}) },
       timeout: timeoutMs ?? this.defaultTimeoutMs,
       params: query,
     };
 
     if (data !== undefined) {
       requestOptions.data = data;
-      requestOptions.headers = { ...requestOptions.headers, 'Content-Type': 'application/json' };
+      requestOptions.headers['Content-Type'] = 'application/json';
     }
 
     let res;
@@ -119,23 +73,24 @@ export class ApiClient {
   delete(path, headers, opts)       { return this.requestWithHandling('delete', path, { headers, ...(opts || {}) }); }
   patch(path, data, headers, opts)  { return this.requestWithHandling('patch', path, { data, headers, ...(opts || {}) }); }
 
-  // ✅ CRUD endpoints (with auth)
-  getUsers(page = 1, opts)          { return this.get(`/api/users`, undefined, { ...(opts || {}), query: { page } }); }
-  getUser(id, opts)                 { return this.get(`/api/users/${id}`, undefined, opts); }
-  createUser(user, opts)            { return this.post(`/api/users`, user, undefined, opts); }
-  updateUser(id, user, opts)        { return this.put(`/api/users/${id}`, user, undefined, opts); }
-  deleteUser(id, opts)              { return this.delete(`/api/users/${id}`, undefined, opts); }
+  // ✅ CRUD endpoints (NO auth needed for reqres.in)
+  getUsers(page = 1, opts)          { return this.get(`/api/users`, { 'x-skip-auth': 'true' }, { ...(opts || {}), query: { page } }); }
+  getUser(id, opts)                 { return this.get(`/api/users/${id}`, { 'x-skip-auth': 'true' }, opts); }
+  createUser(user, opts)            { return this.post(`/api/users`, user, { 'x-skip-auth': 'true' }, opts); }
+  updateUser(id, user, opts)        { return this.put(`/api/users/${id}`, user, { 'x-skip-auth': 'true' }, opts); }
+  deleteUser(id, opts)              { return this.delete(`/api/users/${id}`, { 'x-skip-auth': 'true' }, opts); }
   patchUser(id, user, opts)         { 
     if (!id) throw new Error('patchUser requires id');
-    return this.patch(`/api/users/${id}`, user, undefined, opts); 
+    return this.patch(`/api/users/${id}`, user, { 'x-skip-auth': 'true' }, opts); 
   }
 
   // ✅ AUTH endpoints (NO auth required - public endpoints)
   register(credentials, opts) { 
-    return this.post(`/api/register`, credentials, { 'x-skip-auth': true }, opts); 
+    return this.post(`/api/register`, credentials, { 'x-skip-auth': 'true' }, opts); 
   }
-  
+
   login(credentials, opts) { 
-    return this.post(`/api/login`, credentials, { 'x-skip-auth': true }, opts); 
+    return this.post(`/api/login`, credentials, { 'x-skip-auth': 'true' }, opts); 
   }
+
 }

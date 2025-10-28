@@ -13,21 +13,18 @@ export class ConfigValidator {
     ]
   };
 
-  // ✅ API_TOKEN este opțional (reqres.in nu necesită auth pentru /register, /login)
-  static REQUIRED = ['BASE_URL', 'API_BASE_URL', 'API_KEY_HEADER'];
-  static OPTIONAL = ['API_TOKEN']; // ✅ Moved from REQUIRED
+  static REQUIRED = ['BASE_URL', 'API_BASE_URL'];
 
   static validate() {
-    const allKeys = [...this.REQUIRED, ...this.OPTIONAL];
-    const config = Object.fromEntries(allKeys.map(k => [k, process.env[k]]));
+    const config = Object.fromEntries(this.REQUIRED.map(k => [k, process.env[k]]));
     
-    // ✅ Verifică doar câmpurile REQUIRED
+    // Verifică lipsă
     const missing = this.REQUIRED.filter(k => !config[k]?.trim());
     if (missing.length) {
       throw new Error(`Missing required config: ${missing.join(', ')}`);
     }
 
-    // ✅ Validează URL-uri din whitelist
+    // Validează URL-uri din whitelist
     Object.entries(this.ALLOWED_CONFIG).forEach(([field, allowedUrls]) => {
       const value = config[field];
       if (value && !allowedUrls.includes(value)) {
@@ -35,12 +32,7 @@ export class ConfigValidator {
       }
     });
 
-    // ✅ Log warning dacă API_TOKEN lipsește (dar nu eșuează)
     const logger = createLogger();
-    if (!config.API_TOKEN?.trim()) {
-      logger.warn('⚠️  API_TOKEN not set - auth will be skipped for all requests');
-    }
-
     logger.info('✅ Configuration validated successfully');
     return true;
   }

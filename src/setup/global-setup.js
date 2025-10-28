@@ -1,10 +1,9 @@
-// ./src/setup/global-setup.js
-
+// src/setup/global-setup.js
 import { getRunStamp } from '../utils/run-stamp.js';
 import { ConfigValidator } from '../config/configValidator.js';
 import createLogger from '../utils/logger.js';
 import { join } from 'path';
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
 
 export default async function globalSetup() {
     const logger = createLogger();
@@ -17,7 +16,10 @@ export default async function globalSetup() {
     process.env.RUN_TIME = RUN_TIME;
 
     try {
-        const metaPath = join(process.cwd(), 'logs', '.current-run.json');
+        const logsDir = join(process.cwd(), 'logs');
+        mkdirSync(logsDir, { recursive: true });
+        
+        const metaPath = join(logsDir, '.current-run.json');
         const metaData = { RUN_DATE, RUN_TIME };
         writeFileSync(metaPath, JSON.stringify(metaData, null, 2));
     } catch (e) {
