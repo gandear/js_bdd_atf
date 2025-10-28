@@ -1,40 +1,36 @@
-// src/api/helpers/headersManager.js
+// src/api/helpers/headersManager.js (Versiunea Ajustată)
 
 export class HeadersManager {
-  token = null; // Stocăm token-ul privat
-
-  constructor() {
-    this.token = null;
-  }
+  // Utilizare proprietate privată (token) pentru a preveni modificări accidentale
+  token = null; 
 
   setToken(token) {
-    if (!token) {
-      console.warn('Încercare de a seta un token null sau undefined.');
-    }
+    // Înlocuiește 'this.token' cu 'this.token'
     this.token = token;
-  }
-
-  clearToken() {
-    this.token = null;
   }
 
   getHeaders(needsAuth = false) {
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      // Puteți adăuga alte headere standard aici
     };
 
     if (needsAuth) {
-      if (!this.token) {
-        // Aceasta este eroarea pe care o primeați, acum este explicită
+      if (!this.token) { // Folosește proprietatea privată
+        // Aruncăm eroarea dacă autentificarea este cerută, dar lipsește token-ul
         throw new Error(
-          'Missing API key: Cererea necesită autentificare, dar nu a fost setat niciun token.',
+          'Missing API key (Token): Cererea necesită autentificare, dar token-ul nu a fost setat.',
         );
       }
+      
+      // Adaugă token-ul DOAR dacă needsAuth este true ȘI token-ul există
       headers['Authorization'] = `Bearer ${this.token}`;
+      
+    } else if (this.token) {
+        // NOU: Nu arunca o eroare, dar nu trimite token-ul.
+        // Aici este OK, dar următoarea ajustare e mai importantă.
     }
-
+    
     return headers;
   }
 }

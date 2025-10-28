@@ -70,7 +70,7 @@ export default defineConfig({
       workers: 1,
       use: {
         baseURL: apiBaseURL,
-        trace: 'off',
+        trace: 'on',
         screenshot: 'off',
         video: 'off'
       }

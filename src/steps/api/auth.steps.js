@@ -1,54 +1,50 @@
+// src/steps/api/auth.steps.js
+
 import { createBdd } from 'playwright-bdd';
 import { test, expect } from '../../fixtures/index.js';
-import { SchemaValidator } from '../../api/helpers/schemaValidator.js';
-import { authResponseSchema, errorResponseSchema } from '../../api/schemas/schemas.js';
-import { redactAuth, httpSummary, safeLength } from '../../utils/logging.js';
 
 const { When, Then } = createBdd(test);
 
-/* -------- REGISTER -------- */
-When('I register a user with email {string} and password {string}', async ({ apiClient, testState, logger }, email, password) => {
-    const payload = { email, password };
-    logger.step('POST /api/register', { payload: redactAuth(payload) });
-    const { res, json, text } = await apiClient.register(payload, { throwOnHttpError: false });
-    logger.info('HTTP response', httpSummary(res, json ?? text));
-    testState.res = res; testState.json = json; testState.text = text;
+When(
+  'I send a POST request to {string} with email {string} and password {string}',
+  async function ({ api }, endpoint, email, password) {
+
+    // Asigură-te că endpoint-ul începe cu /api/ dacă baseURL nu conține /api
+    const fullEndpoint = endpoint.startsWith('/api') ? endpoint : `/api${endpoint}`; 
+
+    const response = await api.client.post(fullEndpoint, { email, password }, {
+      auth: false,
+    });
+  },
+);
+
+Then('the response contains a valid auth token', async function ({ api }) {
+  const response = api.getLastResponse();
+  expect(response.ok()).toBeTruthy();
+
+  const responseBody = await api.getLastResponseBody();
+  const token = responseBody.token; 
+
+  expect(token).toBeDefined();
+
+  // PAS CRITIC: Salvează token-ul pentru a fi folosit în alte scenarii
+  api.headersManager.setToken(token);
 });
 
-Then('the response contains a user ID', async ({ testState, logger }) => {
-  const id = testState.json?.id;
-  expect(id).toBeTruthy();
-  logger.info('User ID present', { idPreview: String(id).slice(0, 6) + '…' });
+Then('the response contains a newly generated user ID', async function ({ api }) {
+    const responseBody = await api.getLastResponseBody();
+    expect(responseBody.id).toBeDefined();
+    expect(typeof responseBody.id).toBe('string');
 });
 
-Then('the response contains an authentication token', async ({ testState, logger }) => {
-  expect(testState.json?.token).toBeTruthy();
-  logger.info('Auth token present', { tokenPreview: String(testState.json?.token).slice(0, 5) + '…' });
+Then('the response contains a newly generated user ID as a number', async function ({ api }) {
+  const responseBody = await api.getLastResponseBody();
+  expect(responseBody.id).toBeDefined();
+  expect(typeof responseBody.id).toBe('number'); // <-- Așteaptă Number
 });
 
-Then('the response contains the error message {string}', async ({ testState, logger }, expected) => {
-  expect(String(testState.json?.error || testState.text || '')).toContain(expected);
-  logger.info('Error message asserted', { expected, bodyPreview: safeLength(testState.json ?? testState.text, 240) });
-});
-
-/* -------- LOGIN -------- */
-When('I log in with email {string} and password {string}', async ({ apiClient, testState, logger }, email, password) => {
-    const payload = { email, password };
-    logger.step('POST /api/login', { payload: redactAuth(payload) });
-    const { res, json, text } = await apiClient.login(payload, { throwOnHttpError: false });
-    logger.info('HTTP response', httpSummary(res, json ?? text));
-    testState.res = res; testState.json = json; testState.text = text;
-});
-
-/* -------- GENERIC HTTP ASSERTIONS (reused by both REGISTER/LOGIN) -------- */
-Then('the HTTP response is {int}', async ({ testState, logger }, status) => {
-  logger.debug?.('testState.res before assertion', { res: testState.res });
-  expect(testState.res.status()).toBe(status);
-  logger.action('Assert HTTP status exact', { expected: status, actual: testState.res.status() });
-});
-
-Then('the HTTP response is {int} labeled {string}', async ({ testState, logger }, status, _label) => {
-  logger.debug?.('testState.res before assertion', { res: testState.res });
-  expect(testState.res.status()).toBe(status);
-  logger.action('Assert HTTP status exact (labeled)', { expected: status, label: _label });
+Then('the response contains the error message {string}', async function ({ api }, expectedError) {
+  const responseBody = await api.getLastResponseBody();
+  const errorMessage = responseBody.error || responseBody.message; // Adaptare la structuri diferite de erori
+  expect(errorMessage).toBe(expectedError);
 });

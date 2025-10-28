@@ -1,10 +1,4 @@
 // src/api/helpers/testDataManager.js
-/**
- * TestDataManager
- * - Tracks created resources and ensures idempotent cleanup.
- * - Exposes createTestUser(payload?) and recordCreatedUser(id).
- */
-
 import createLogger from '../../utils/logger.js';
 
 export class TestDataManager {

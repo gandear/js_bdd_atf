@@ -3,22 +3,43 @@ import { test, expect } from '../../fixtures/index.js';
 
 const { Given } = createBdd(test);
 
-Given('the authentication endpoint is configured', async ({ logger }) => {
-  logger.step('Verify auth endpoints exist');
-  logger.info('Auth endpoints configured', { register: '/api/register', login: '/api/login' });
+Given('I am logged in as a valid user', async function ({ api }) {
+  // VERIFICARE: Loghează ce trimite!
+  console.log('Tentativă de Login cu:', {
+    email: process.env.VALID_EMAIL,
+    password: process.env.VALID_PASSWORD,
+  });
+
+  const response = await api.client.post(
+    '/api/login', // Asigură-te că /api/login este corect
+    {
+      email: process.env.VALID_EMAIL,
+      password: process.env.VALID_PASSWORD,
+    },
+    { auth: false }, 
+  );
+
+  if (response.status() !== 200 && response.status() !== 201) {
+    // În loc să arunce o eroare generică, afișăm răspunsul serverului
+    const responseText = await response.text();
+    throw new Error(
+      `Autentificare eșuată în Background! Status: ${response.status()}. Răspuns server: "${responseText.substring(0, 100)}..."`,
+    );
+  }
+
+  const responseBody = await response.json();
+  const token = responseBody.token;
+
+  if (!response.ok() || !token) {
+    throw new Error(`Autentificare eșuată în Background! Status: ${response.status()}`);
+  }
+
+  // Setarea token-ului pentru a fi folosit de pașii următori cu { auth: true }
+  api.headersManager.setToken(token);
+  
 });
 
-Given('the API client is ready', async ({ apiClient, logger }) => {
-  logger.step('Initialize API client');
-  expect(apiClient).toBeTruthy();
-  expect(apiClient.register).toBeDefined();
-  expect(apiClient.login).toBeDefined();
-  logger.info('API client ready');
-});
-
-Given('no previous auth token is set', async ({ apiClient, testState, logger }) => {
-  logger.step('Clear previous auth token');
-  apiClient.setAuthToken?.(null);
-  testState.authToken = null;
-  logger.info('Auth state cleared');
+Given('no previous auth token is set', async ({ api }) => {
+  // Pasul tău original de resetare a stării
+  api.headersManager.setToken(null);
 });

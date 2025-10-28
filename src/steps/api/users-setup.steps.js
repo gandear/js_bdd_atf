@@ -1,26 +1,47 @@
+// src/steps/api/users-setup.steps.js (FINAL)
+
 import { createBdd } from 'playwright-bdd';
 import { test, expect } from '../../fixtures/index.js';
 
-const { Given } = createBdd(test);
+const { Given, Then } = createBdd(test);
 
-Given('the API is available and running', async ({ apiClient, logger }) => {
-  logger.step('Health check: GET /api/users?page=1');
-  const { res } = await apiClient.getUsers(1, { throwOnHttpError: false });
-  expect(res.status()).toBeLessThan(500);
-  logger.info('API healthy', { status: res.status() });
+/**
+ * Acest pas creează o resursă necesară altor pași (e.g., pentru update sau delete).
+ */
+Given(
+  'I create a random user with job {string}',
+  async function ({ api }, job) {
+    const randomName = 'SetupUser_' + Math.floor(Math.random() * 1000);
+    const userData = { name: randomName, job: job };
+
+    // Creează user-ul (auth: false pentru ReqRes)
+    const response = await api.client.post('/users', userData, {
+      auth: false, 
+    });
+
+    expect(response.status()).toBe(201); 
+
+    const user = await api.getLastResponseBody();
+    
+    // CRITIC: Înregistrează user-ul pentru curățare automată prin dataManager
+    api.dataManager.addCreatedUser(user); 
+    
+    // Setează datele în contextul BDD pentru a fi folosite în alte steps (e.g., pentru ID-ul de șters)
+    this.createdUser = user;
+    this.createdUserId = user.id; 
+  },
+);
+
+/**
+ * Pasul care asigură că nu există tokeni vechi setați.
+ */
+Given('the API client is initialized', async ({ api }) => {
+    // Verifică că managerul de headere și clientul există (test simplu de setup)
+    expect(api.client).toBeDefined();
+    expect(api.headersManager).toBeDefined();
 });
 
-Given('the API client is initialized', async ({ apiClient, logger }) => {
-  logger.step('Initialize API client');
-  expect(apiClient).toBeTruthy();
-  expect(apiClient.request).toBeTruthy();
-
-  // sanity pentru /users – ajustează după API-ul tău
-  expect(apiClient.getUsers).toBeDefined();
-  expect(apiClient.getUser).toBeDefined();
-  expect(apiClient.createUser).toBeDefined();
-  expect(apiClient.updateUser).toBeDefined();
-  expect(apiClient.deleteUser).toBeDefined();
-
-  logger.info('API client ready');
+// Puteți adăuga aici și logica de curățare explicită, dacă nu este în After Hook
+Then('all created test data should be cleaned up', async function ({ api }) {
+    await api.dataManager.cleanupCreatedUsers();
 });
