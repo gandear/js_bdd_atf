@@ -4,11 +4,6 @@ import { test, expect } from '../../fixtures/index.js';
 const { Given } = createBdd(test);
 
 Given('I am logged in as a valid user', async function ({ api }) {
-  // VERIFICARE: Loghează ce trimite!
-  console.log('Tentativă de Login cu:', {
-    email: process.env.VALID_EMAIL,
-    password: process.env.VALID_PASSWORD,
-  });
 
   const response = await api.client.post(
     '/api/login', // Asigură-te că /api/login este corect
