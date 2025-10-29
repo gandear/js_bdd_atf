@@ -1,7 +1,4 @@
 // src/api/clients/errors.js
-/**
- * General API error classes and a single serialized error helper.
- */
 
 export class ApiError extends Error {
   constructor(message, opts = {}) {
@@ -33,9 +30,8 @@ export class TimeoutError extends Error {
 }
 
 /**
- * serializeError
- * - Normalizes various error shapes into a stable plain object for logging/telemetry.
- * - Use this single exported helper everywhere instead of duplicate implementations.
+ * Serialize error for logging/telemetry
+ * Used by logger when capturing errors
  */
 export function serializeError(err) {
   if (!err) return { message: 'Unknown error' };
@@ -45,13 +41,11 @@ export function serializeError(err) {
     message: err.message ?? String(err),
   };
 
-  // Common optional properties
   if (err.url) base.url = err.url;
   if (err.status !== undefined) base.status = err.status;
   if (err.timeout !== undefined) base.timeout = err.timeout;
   if (err.stack) base.stack = err.stack;
 
-  // If the error has a cause (native or custom), include a short representation
   if (err.cause) {
     try {
       const c = err.cause;

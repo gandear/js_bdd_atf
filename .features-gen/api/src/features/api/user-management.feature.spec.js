@@ -3,8 +3,8 @@ import { test } from "../../../../../src/fixtures/index.js";
 
 test.describe('User Management (API)', () => {
 
-  test.beforeEach('Background', async ({ Given, api }, testInfo) => { if (testInfo.error) return;
-    await Given('I am logged in as a valid user', null, { api }); 
+  test.beforeEach('Background', async ({ Given, api, logger }, testInfo) => { if (testInfo.error) return;
+    await Given('I am logged in as a valid user', null, { api, logger }); 
   });
   
   test.describe('List users for a specific page', () => {
@@ -47,6 +47,8 @@ test.describe('User Management (API)', () => {
 });
 
 // == technical section ==
+
+test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, api, logger }) => $runScenarioHooks('before', { api, logger }));
 
 test.use({
   $test: [({}, use) => use(test), { scope: 'test', box: true }],

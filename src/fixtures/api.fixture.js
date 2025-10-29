@@ -1,27 +1,29 @@
-// src/fixtures/api.fixture.js (FINAL)
-
+// src/fixtures/api.fixture.js
 import { ApiClient } from '../api/clients/ApiClient.js';
-import { HeadersManager } from '../api/helpers/headersManager.js'; // NOU
-import { testStateFixtures } from './testState.fixture.js';
+import { HeadersManager } from '../api/helpers/headersManager.js';
 import { TestDataManager } from '../api/helpers/testDataManager.js';
+import { testStateFixtures } from './testState.fixture.js';
 
 export const apiFixtures = {
   ...testStateFixtures,
 
-  // NOU: Fixtură pentru managementul stării (token-ului)
+  /**
+   * Manages auth token state (persists across worker)
+   */
   headersManager: [
     async ({}, use) => {
       const manager = new HeadersManager();
       await use(manager);
     },
-    { scope: 'worker' } // Token-ul persistă pe durata worker-ului
+    { scope: 'worker' }
   ],
 
-  // MODIFICAT: Acum depinde de headersManager și îl pasează către ApiClient
+  /**
+   * HTTP client with auth support
+   */
   apiClient: async ({ request, logger, headersManager }, use, testInfo) => {
     const baseURL = testInfo?.project?.use?.baseURL ?? process.env.API_BASE_URL ?? '';
 
-    // ATENȚIE: headersManager este pasat în constructor
     const apiClient = new ApiClient(request, headersManager, { 
       baseURL,
       defaultHeaders: {
@@ -35,31 +37,42 @@ export const apiFixtures = {
     await use(apiClient);
   },
 
-  // RESTAURAT: testDataManager (fără modificări)
+  /**
+   * Test data lifecycle manager (cleanup on teardown)
+   */
   testDataManager: async ({ apiClient, logger }, use, testInfo) => {
     const manager = new TestDataManager(apiClient, { logger });
+    
     await use(manager);
+    
+    // Cleanup tracked resources
     await manager.cleanupCreatedUsers();
+    
+    // Attach metrics
     await testInfo.attach('test-data-metrics.json', {
       body: JSON.stringify(manager.getTestMetrics(), null, 2),
       contentType: 'application/json'
     });
   },
 
-  // NOU: Fixtură de context simplificată pentru steps ({ api })
+  /**
+   * Unified API context for steps
+   * Provides: client, headersManager, dataManager, helpers
+   */
   api: async ({ apiClient, headersManager, testDataManager }, use) => {
-     const apiContext = {
-        client: apiClient, // Clientul API modificat
-        headersManager: headersManager, // Managerul de token (pentru setToken)
-        dataManager: testDataManager, // Managerul de date de test (pentru CRUD de setup)
-        
-        // Helpers pentru acces rapid în steps
-        getLastResponse: () => apiClient.getLastResponse(),
-        getLastResponseBody: async () => {
-          const response = apiClient.getLastResponse();
-          return response ? response.json() : null;
-        }
-     };
-     await use(apiContext);
+    const apiContext = {
+      client: apiClient,
+      headersManager: headersManager,
+      dataManager: testDataManager,
+      
+      // Quick accessors for steps
+      getLastResponse: () => apiClient.getLastResponse(),
+      getLastResponseBody: async () => {
+        const response = apiClient.getLastResponse();
+        return response ? response.json() : null;
+      }
+    };
+    
+    await use(apiContext);
   }
 };

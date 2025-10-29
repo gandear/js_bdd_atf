@@ -1,9 +1,27 @@
+// src/steps/hooks/bdd.hooks.js
 import { createBdd } from 'playwright-bdd';
 const { Before, After } = createBdd();
 
+/**
+ * Enforce authentication for @secure scenarios
+ */
+Before('@secure', async ({ api, logger }) => {
+  if (!api?.headersManager?.token) {
+    logger?.error('Auth required but token missing');
+    throw new Error(
+      'Scenario tagged @secure requires authentication. ' +
+      'Ensure "Given I am logged in as a valid user" runs in Background.'
+    );
+  }
+  logger?.debug('Auth token verified for @secure scenario');
+});
+
+/**
+ * UI test cleanup: screenshots and logs on failure
+ */
 After('@ui', async ({ logger, page, testInfo }) => {
   try {
-    // ✅ Always capture screenshot on failure
+    // Capture screenshot on failure
     if (testInfo.status !== 'passed' && page?.screenshot) {
       try {
         const buffer = await page.screenshot({ fullPage: true });
@@ -12,7 +30,7 @@ After('@ui', async ({ logger, page, testInfo }) => {
           contentType: 'image/png' 
         });
         
-        // ✅ Also capture HTML for debugging
+        // Capture HTML for debugging
         const html = await page.content();
         await testInfo.attach('page.html', { 
           body: html, 
@@ -24,6 +42,7 @@ After('@ui', async ({ logger, page, testInfo }) => {
       }
     }
     
+    // Attach execution log
     if (logger?.filePath && testInfo?.attach) {
       await testInfo.attach('execution.log', { 
         path: logger.filePath, 
